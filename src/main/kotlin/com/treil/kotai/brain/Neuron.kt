@@ -4,12 +4,28 @@ package com.treil.kotai.brain
  * @author Nicolas
  * @since 15/04/2021.
  */
-class Neuron : HasValue {
-    class Input(val input: HasValue, var coef: Short) {
+open class Neuron : HasValue, HasDNA {
+    class Input(private val input: HasValue, var coef: Short) : HasDNA {
+        private val DNA_SIZE = Short.SIZE_BYTES * 2
 
         fun value(): Int {
             return coef * input.value
         }
+
+        override fun toDNA(): String {
+            val v = coef.toString(16)
+            return "0000".substring(v.length) + v
+        }
+
+        fun updateCoefFromDNA(remainder: String): String {
+            if (remainder.length < DNA_SIZE) {
+                coef = 0;
+                return "";
+            }
+            coef = remainder.substring(0, DNA_SIZE).toShort(16)
+            return remainder.substring(DNA_SIZE)
+        }
+
     }
 
     private val inputs: MutableList<Input> = ArrayList()
@@ -27,4 +43,21 @@ class Neuron : HasValue {
     fun addInput(value: HasValue, coef: Short) {
         inputs.add(Input(value, coef))
     }
+
+    override fun toDNA(): String {
+        return inputs.fold(StringBuilder()) { b, input -> b.append(input.toDNA()) }.toString()
+    }
+
+    fun setAllCoefs(coef: Short) {
+        inputs.forEach { input -> input.coef = coef }
+    }
+
+    fun updateCoefsFromDNA(dna: String): String {
+        var remainder = dna
+        for (input in inputs) {
+            remainder = input.updateCoefFromDNA(remainder)
+        }
+        return remainder
+    }
+
 }
