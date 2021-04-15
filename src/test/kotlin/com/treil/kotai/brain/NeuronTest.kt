@@ -8,15 +8,14 @@ import org.junit.jupiter.api.Test
  * @since 15/04/2021.
  */
 internal class NeuronTest {
-    class StaticValue(override val value: Short) : HasValue {
-    }
+    class StaticValue(override val value: Short) : HasValue
 
     @Test
     fun testOutput() {
         val three: HasValue = StaticValue(3)
 
         val input: Neuron.Input = Neuron.Input(three, Short.MAX_VALUE)
-        assertEquals(3, input.value())
+        assertEquals(3 * Short.MAX_VALUE, input.value())
     }
 
     @Test
@@ -24,7 +23,7 @@ internal class NeuronTest {
         val max: HasValue = StaticValue(Short.MAX_VALUE)
 
         val input: Neuron.Input = Neuron.Input(max, Short.MAX_VALUE)
-        assertEquals(Short.MAX_VALUE.toInt(), input.value())
+        assertEquals(Short.MAX_VALUE * Short.MAX_VALUE, input.value())
     }
 
     @Test
@@ -39,14 +38,15 @@ internal class NeuronTest {
 
     @Test
     fun testCompute() {
-        val two: HasValue = StaticValue(2)
-        val three: HasValue = StaticValue(3)
+        val twenty: HasValue = StaticValue(20)
+        val ten: HasValue = StaticValue(10)
+        val half = (Short.MAX_VALUE / 2).toShort()
 
         val neuron = Neuron()
-        neuron.addInput(two, 4)
-        neuron.addInput(three, -2)
+        neuron.addInput(twenty, Short.MAX_VALUE)
+        neuron.addInput(ten, (-half).toShort())
         neuron.compute()
-        val expected : Short =  2
+        val expected: Short = 15
         assertEquals(expected, neuron.value)
     }
 }

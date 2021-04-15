@@ -8,7 +8,7 @@ class Neuron : HasValue {
     class Input(val input: HasValue, var coef: Short) {
 
         fun value(): Int {
-            return coef * input.value / Short.MAX_VALUE
+            return coef * input.value
         }
     }
 
@@ -18,9 +18,10 @@ class Neuron : HasValue {
 
     fun compute() {
         val fold = inputs.fold(0L) { acc, input -> acc + input.value() }
-        if (fold > Short.MAX_VALUE) value = Short.MAX_VALUE
-        if (fold < Short.MIN_VALUE) value = Short.MIN_VALUE
-        value = fold.toShort()
+        val v = (fold / Short.MAX_VALUE).toShort()
+        if (v > Short.MAX_VALUE) value = Short.MAX_VALUE
+        if (v < Short.MIN_VALUE) value = Short.MIN_VALUE
+        value = v
     }
 
     fun addInput(value: HasValue, coef: Short) {
