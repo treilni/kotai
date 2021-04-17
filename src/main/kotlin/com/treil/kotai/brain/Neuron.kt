@@ -1,5 +1,7 @@
 package com.treil.kotai.brain
 
+import com.treil.kotai.DNA
+
 /**
  * @author Nicolas
  * @since 15/04/2021.

@@ -5,7 +5,7 @@ package com.treil.kotai
  * @since 15/04/2021.
  */
 class DNA {
-    enum class Type(val symbol: Char) {
+    enum class Separator(val symbol: Char) {
         LAYER('L'), NEURON('N'), COEF('C')
     }
 }
