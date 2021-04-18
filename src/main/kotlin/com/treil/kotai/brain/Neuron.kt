@@ -15,17 +15,11 @@ open class Neuron : HasValue, HasDNA {
         }
 
         override fun toDNA(): String {
-            val v = coef.toString(16)
-            return "0000".substring(v.length) + v
+            return coef.toInt().toString()
         }
 
-        fun updateCoefFromDNA(remainder: String): String {
-            if (remainder.length < DNA_SIZE) {
-                coef = 0;
-                return "";
-            }
-            coef = remainder.substring(0, DNA_SIZE).toShort(16)
-            return remainder.substring(DNA_SIZE)
+        fun updateCoefFromDNA(dna: String) {
+            coef = dna.toShort()
         }
 
     }
@@ -42,24 +36,31 @@ open class Neuron : HasValue, HasDNA {
         value = v
     }
 
-    fun addInput(value: HasValue, coef: Short) {
+    fun addInput(value: HasValue, coef: Short = 0) {
         inputs.add(Input(value, coef))
     }
 
     override fun toDNA(): String {
-        return inputs.fold(StringBuilder()) { b, input -> b.append(input.toDNA()) }.toString()
+        return inputs.joinToString(separator = DNA.Separator.COEF.symbol.toString()) { input -> input.toDNA() }
     }
 
     fun setAllCoefs(coef: Short) {
         inputs.forEach { input -> input.coef = coef }
     }
 
-    fun updateCoefsFromDNA(dna: String): String {
-        var remainder = dna
-        for (input in inputs) {
-            remainder = input.updateCoefFromDNA(remainder)
+    fun updateCoefsFromDNA(dna: String) {
+        val split = dna.ifEmpty() { "0" }.split(DNA.Separator.COEF.symbol)
+        for (i in split.indices) {
+            if (i >= inputs.size) {
+                break;
+            }
+            inputs[i].updateCoefFromDNA(split[i])
         }
-        return remainder
+        var i = split.size
+        while (i < inputs.size) {
+            inputs[i].coef = 0
+            i++
+        }
     }
 
 }

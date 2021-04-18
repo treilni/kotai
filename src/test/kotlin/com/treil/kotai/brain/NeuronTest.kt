@@ -1,13 +1,20 @@
 package com.treil.kotai.brain
 
+import com.treil.kotai.Application
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
  * @author Nicolas
  * @since 15/04/2021.
  */
 internal class NeuronTest {
+    companion object {
+        val logger: Logger = LoggerFactory.getLogger(Application::class.java.simpleName)
+    }
+
     class StaticValue(override val value: Short) : HasValue
 
     @Test

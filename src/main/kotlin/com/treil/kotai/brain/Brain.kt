@@ -6,8 +6,19 @@ import com.treil.kotai.DNA
  * @author Nicolas
  * @since 17/04/2021.
  */
-class Brain(val inputLayer: InputLayer, vararg layerSizes: Int) : HasDNA {
-    val layers: MutableList<NeuronLayer>
+class Brain(inputLayer: InputLayer, vararg layerSizes: Int) : HasDNA {
+    private val layers: MutableList<NeuronLayer>
+
+    constructor(inputLayer: InputLayer, dna: String) : this(inputLayer) {
+        val layerDnas = dna.split(DNA.Separator.LAYER.symbol)
+        var input = inputLayer
+        layerDnas.forEach { layerDna ->
+            val neuronLayer = NeuronLayer(input)
+            neuronLayer.createNeuronsFromDNA(layerDna)
+            layers.add(neuronLayer)
+            input = neuronLayer
+        }
+    }
 
     init {
         layers = ArrayList(layerSizes.size)
@@ -23,4 +34,7 @@ class Brain(val inputLayer: InputLayer, vararg layerSizes: Int) : HasDNA {
         return layers.joinToString(DNA.Separator.LAYER.symbol.toString()) { layer -> layer.toDNA() }
     }
 
+    fun compute() {
+        layers.forEach { layer -> layer.compute() }
+    }
 }

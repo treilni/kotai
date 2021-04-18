@@ -31,14 +31,24 @@ class NeuronLayer(private val inputLayer: InputLayer) : InputLayer(), HasDNA {
     fun updateCoefsFromDNA(dna: String) {
         val split = ArrayList(dna.split(DNA.Separator.NEURON.symbol))
         while (split.size < neurons.size) {
-            split.add("")
+            split.add("0")
         }
         for ((i, neuron) in neurons.withIndex()) {
-            neuron.updateCoefsFromDNA(split[i])
+            val neuronDna = split[i]
+            neuron.updateCoefsFromDNA(neuronDna)
         }
     }
 
     fun mutate() {
 
+    }
+
+    fun createNeuronsFromDNA(dna: String) {
+        val split = ArrayList(dna.split(DNA.Separator.NEURON.symbol))
+        repeat(split.size) { i ->
+            val neuron = Neuron()
+            add(neuron)
+            neuron.updateCoefsFromDNA(split[i])
+        }
     }
 }

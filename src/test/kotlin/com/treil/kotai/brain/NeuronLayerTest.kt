@@ -3,6 +3,7 @@ package com.treil.kotai.brain
 import com.treil.kotai.Application
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 /**
@@ -10,8 +11,9 @@ import org.slf4j.LoggerFactory
  * @since 15/04/2021.
  */
 internal class NeuronLayerTest {
+    @Suppress("unused")
     companion object {
-        val logger = LoggerFactory.getLogger(Application::class.java.getSimpleName())
+        val logger: Logger = LoggerFactory.getLogger(Application::class.java.simpleName)
     }
 
     @Test
@@ -22,13 +24,13 @@ internal class NeuronLayerTest {
         val neuron = Neuron()
 
         layer.add(neuron)
-        assertEquals("00000000", neuron.toDNA())
+        assertEquals("0C0", neuron.toDNA())
         layer.add(Neuron())
         layer.add(Neuron())
-        assertEquals("00000000N00000000N00000000", layer.toDNA())
+        assertEquals("0C0N0C0N0C0", layer.toDNA())
 
         neuron.setAllCoefs(Short.MAX_VALUE)
-        assertEquals("7fff7fffN00000000N00000000", layer.toDNA())
+        assertEquals("32767C32767N0C0N0C0", layer.toDNA())
     }
 
     @Test
@@ -38,22 +40,19 @@ internal class NeuronLayerTest {
         val layer = NeuronLayer(inputLayer)
         layer.add(Neuron())
         layer.add(Neuron())
-        assertEquals("00000000N00000000", layer.toDNA())
+        assertEquals("0C0N0C0", layer.toDNA())
 
-        layer.updateCoefsFromDNA("07ff3abcN12345678")
-        assertEquals("07ff3abcN12345678", layer.toDNA())
+        layer.updateCoefsFromDNA("1247C-34N-31755C0")
+        assertEquals("1247C-34N-31755C0", layer.toDNA())
 
-        layer.updateCoefsFromDNA("07ff3abcN12345678N00000000")
-        assertEquals("07ff3abcN12345678", layer.toDNA())
+        layer.updateCoefsFromDNA("1247C-34N-31755C0N0C0")
+        assertEquals("1247C-34N-31755C0", layer.toDNA())
 
-        layer.updateCoefsFromDNA("07ff3abcN12345678N00000000")
-        assertEquals("07ff3abcN12345678", layer.toDNA())
+        layer.updateCoefsFromDNA("1247C-34N")
+        assertEquals("1247C-34N0C0", layer.toDNA())
 
-        layer.updateCoefsFromDNA("07ff3abcN")
-        assertEquals("07ff3abcN00000000", layer.toDNA())
-
-        layer.updateCoefsFromDNA("1234abcN07ff3abc")
-        assertEquals("12340000N07ff3abc", layer.toDNA())
+        layer.updateCoefsFromDNA("1247N-31755C0")
+        assertEquals("1247C0N-31755C0", layer.toDNA())
     }
 
     private fun buildInputLayer(): InputLayer {
