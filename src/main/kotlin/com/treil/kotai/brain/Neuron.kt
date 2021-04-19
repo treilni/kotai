@@ -1,7 +1,5 @@
 package com.treil.kotai.brain
 
-import com.treil.kotai.DNA
-
 /**
  * @author Nicolas
  * @since 15/04/2021.
@@ -22,11 +20,19 @@ open class Neuron : HasValue, HasDNA {
         }
 
         override fun toDNA(): String {
-            return coef.toInt().toString() + DNA.Separator.BIAS.symbol + bias.toString()
+            return coef.toInt().toString() + DNA.Type.BIAS.symbol + bias.toString()
+        }
+
+        override fun mutate(mutator: Mutator) {
+            if (mutator.getMutationIndex(2, "COEF_OR_BIAS") == 0) {
+                coef = mutator.getMutatedShort(coef, DNA.Type.COEF.toString())
+            } else {
+                bias = mutator.getMutatedShort(bias, DNA.Type.BIAS.toString())
+            }
         }
 
         fun updateCoefFromDNA(dna: String) {
-            val split = dna.split(DNA.Separator.BIAS.symbol)
+            val split = dna.split(DNA.Type.BIAS.symbol)
             if (split.size != 2) {
                 throw IllegalArgumentException("Illegal Input DNA : %s".format(dna))
             }
@@ -52,7 +58,7 @@ open class Neuron : HasValue, HasDNA {
     }
 
     override fun toDNA(): String {
-        return inputs.joinToString(separator = DNA.Separator.COEF.symbol.toString()) { input -> input.toDNA() }
+        return inputs.joinToString(separator = DNA.Type.COEF.symbol.toString()) { input -> input.toDNA() }
     }
 
     fun setAllCoefs(coef: Short) {
@@ -60,7 +66,7 @@ open class Neuron : HasValue, HasDNA {
     }
 
     fun updateCoefsFromDNA(dna: String) {
-        val split = dna.ifEmpty() { "0/0" }.split(DNA.Separator.COEF.symbol)
+        val split = dna.ifEmpty() { "0/0" }.split(DNA.Type.COEF.symbol)
         for (i in split.indices) {
             if (i >= inputs.size) {
                 break
@@ -72,6 +78,11 @@ open class Neuron : HasValue, HasDNA {
             inputs[i].coef = 0
             i++
         }
+    }
+
+    override fun mutate(mutator: Mutator) {
+        val i: Int = mutator.getMutationIndex(inputs.size, "INPUT")
+        inputs[i].mutate(mutator)
     }
 
 }

@@ -1,7 +1,5 @@
 package com.treil.kotai.brain
 
-import com.treil.kotai.DNA
-
 /**
  * @author Nicolas
  * @since 15/04/2021.
@@ -25,23 +23,24 @@ class NeuronLayer(private val inputLayer: InputLayer) : InputLayer(), HasDNA {
     }
 
     override fun toDNA(): String {
-        return neurons.joinToString(separator = DNA.Separator.NEURON.symbol.toString()) { neuron -> neuron.toDNA() }
+        return neurons.joinToString(separator = DNA.Type.NEURON.symbol.toString()) { neuron -> neuron.toDNA() }
+    }
+
+    override fun mutate(mutator: Mutator) {
+        val neuronIndex = mutator.getMutationIndex(neurons.size, DNA.Type.NEURON.toString())
+        neurons[neuronIndex].mutate(mutator)
     }
 
     fun updateCoefsFromDNA(dna: String) {
-        val split = ArrayList(dna.split(DNA.Separator.NEURON.symbol))
+        val split = ArrayList(dna.split(DNA.Type.NEURON.symbol))
         for ((i, neuron) in neurons.withIndex()) {
             val neuronDna = split.getOrElse(i) { "" }
             neuron.updateCoefsFromDNA(neuronDna)
         }
     }
 
-    fun mutate() {
-
-    }
-
     fun createNeuronsFromDNA(dna: String) {
-        val split = ArrayList(dna.split(DNA.Separator.NEURON.symbol))
+        val split = ArrayList(dna.split(DNA.Type.NEURON.symbol))
         repeat(split.size) { i ->
             val neuron = Neuron()
             add(neuron)

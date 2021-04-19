@@ -2,12 +2,17 @@ package com.treil.kotai.brain
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
  * @author Nicolas
  * @since 17/04/2021.
  */
 internal class BrainTest {
+    companion object {
+        val logger: Logger = LoggerFactory.getLogger(BrainTest::class.java.simpleName)
+    }
 
     @Test
     fun toDNA() {
@@ -30,5 +35,21 @@ internal class BrainTest {
         val brain = Brain(inputLayer, dna)
 
         assertEquals(dna, brain.toDNA())
+    }
+
+    @Test
+    fun mutate() {
+        val inputLayer = InputLayer()
+        inputLayer.add(NeuronTest.StaticValue(0))
+        inputLayer.add(NeuronTest.StaticValue(0))
+
+        val mutator = TestMutator()
+        val brain = Brain(inputLayer, dna = "0/0C0/0N0/0C0/0L0/0C0/0N0/0C0/0N0/0C0/0")
+        brain.mutate(mutator)
+        logger.info("-----------------")
+        assertEquals("0/0C0/0N0/10C0/0L0/0C0/0N0/0C0/0N0/0C0/0", brain.toDNA())
+        brain.mutate(mutator)
+        logger.info("-----------------")
+        assertEquals("0/0C0/0N0/10C0/0L0/0C-5/0N0/0C0/0N0/0C0/0", brain.toDNA())
     }
 }

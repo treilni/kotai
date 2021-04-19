@@ -6,4 +6,5 @@ package com.treil.kotai.brain
  */
 interface HasDNA {
     fun toDNA(): String
+    fun mutate(mutator: Mutator)
 }
