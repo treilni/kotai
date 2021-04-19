@@ -6,6 +6,13 @@ import com.treil.kotai.DNA
  * @author Nicolas
  * @since 15/04/2021.
  */
+
+object Constants {
+    const val NORMALIZATION_FACTOR = Short.MAX_VALUE.toDouble() * Short.MAX_VALUE.toDouble() / 100.0
+    const val MIN_OUT = Short.MIN_VALUE.toDouble()
+    const val OUT_RANGE = Short.MAX_VALUE.toDouble() - Short.MIN_VALUE.toDouble()
+}
+
 open class Neuron : HasValue, HasDNA {
     class Input(private val input: HasValue, var coef: Short, var bias: Short) : HasDNA {
         private val DNA_SIZE = Short.SIZE_BYTES * 2
@@ -35,10 +42,9 @@ open class Neuron : HasValue, HasDNA {
 
     fun compute() {
         val fold = inputs.fold(0L) { acc, input -> acc + input.value() }
-        val v = (fold / Short.MAX_VALUE).toShort()
-        if (v > Short.MAX_VALUE) value = Short.MAX_VALUE
-        if (v < Short.MIN_VALUE) value = Short.MIN_VALUE
-        value = v
+        val normalized = fold.toDouble() / Constants.NORMALIZATION_FACTOR
+        val result = Constants.MIN_OUT + (Constants.OUT_RANGE / (1.0 + Math.exp(-normalized)))
+        value = Math.round(result).toShort()
     }
 
     fun addInput(value: HasValue, coef: Short = 0, bias: Short = 0) {
