@@ -17,7 +17,7 @@ internal class BrainTest {
 
         val brain = Brain(inputLayer, 2, 3)
 
-        assertEquals("0C0N0C0L0C0N0C0N0C0", brain.toDNA())
+        assertEquals("0/0C0/0N0/0C0/0L0/0C0/0N0/0C0/0N0/0C0/0", brain.toDNA())
     }
 
     @Test
@@ -26,7 +26,7 @@ internal class BrainTest {
         inputLayer.add(NeuronTest.StaticValue(3))
         inputLayer.add(NeuronTest.StaticValue(5))
 
-        val dna = "1111C2222N3333C4444L5555C6666N7777C8888N9999C8765"
+        val dna = "1111/0C2222/0N3333/0C4444/0L5555/0C6666/0N7777/0C8888/0N9999/0C8765/0"
         val brain = Brain(inputLayer, dna)
 
         assertEquals(dna, brain.toDNA())

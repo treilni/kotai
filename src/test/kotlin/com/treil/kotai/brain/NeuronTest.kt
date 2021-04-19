@@ -21,16 +21,24 @@ internal class NeuronTest {
     fun testOutput() {
         val three: HasValue = StaticValue(3)
 
-        val input: Neuron.Input = Neuron.Input(three, Short.MAX_VALUE)
+        val input: Neuron.Input = Neuron.Input(three, Short.MAX_VALUE, 0)
         assertEquals(3 * Short.MAX_VALUE, input.value())
+    }
+
+    @Test
+    fun testOutputWithBias() {
+        val three: HasValue = StaticValue(3)
+
+        val input: Neuron.Input = Neuron.Input(three, Short.MAX_VALUE, -4)
+        assertEquals(3 * Short.MAX_VALUE - 4, input.value())
     }
 
     @Test
     fun testOutput2() {
         val max: HasValue = StaticValue(Short.MAX_VALUE)
 
-        val input: Neuron.Input = Neuron.Input(max, Short.MAX_VALUE)
-        assertEquals(Short.MAX_VALUE * Short.MAX_VALUE, input.value())
+        val input: Neuron.Input = Neuron.Input(max, Short.MAX_VALUE, Short.MAX_VALUE)
+        assertEquals(Short.MAX_VALUE * Short.MAX_VALUE + Short.MAX_VALUE, input.value())
     }
 
     @Test

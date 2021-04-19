@@ -30,11 +30,8 @@ class NeuronLayer(private val inputLayer: InputLayer) : InputLayer(), HasDNA {
 
     fun updateCoefsFromDNA(dna: String) {
         val split = ArrayList(dna.split(DNA.Separator.NEURON.symbol))
-        while (split.size < neurons.size) {
-            split.add("0")
-        }
         for ((i, neuron) in neurons.withIndex()) {
-            val neuronDna = split[i]
+            val neuronDna = split.getOrElse(i) { "" }
             neuron.updateCoefsFromDNA(neuronDna)
         }
     }

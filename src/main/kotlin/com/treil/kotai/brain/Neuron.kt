@@ -7,19 +7,24 @@ import com.treil.kotai.DNA
  * @since 15/04/2021.
  */
 open class Neuron : HasValue, HasDNA {
-    class Input(private val input: HasValue, var coef: Short) : HasDNA {
+    class Input(private val input: HasValue, var coef: Short, var bias: Short) : HasDNA {
         private val DNA_SIZE = Short.SIZE_BYTES * 2
 
         fun value(): Int {
-            return coef * input.value
+            return coef * input.value + bias
         }
 
         override fun toDNA(): String {
-            return coef.toInt().toString()
+            return coef.toInt().toString() + DNA.Separator.BIAS.symbol + bias.toString()
         }
 
         fun updateCoefFromDNA(dna: String) {
-            coef = dna.toShort()
+            val split = dna.split(DNA.Separator.BIAS.symbol)
+            if (split.size != 2) {
+                throw IllegalArgumentException("Illegal Input DNA : %s".format(dna))
+            }
+            coef = split[0].toShort()
+            bias = split[1].toShort()
         }
 
     }
@@ -36,8 +41,8 @@ open class Neuron : HasValue, HasDNA {
         value = v
     }
 
-    fun addInput(value: HasValue, coef: Short = 0) {
-        inputs.add(Input(value, coef))
+    fun addInput(value: HasValue, coef: Short = 0, bias: Short = 0) {
+        inputs.add(Input(value, coef, bias))
     }
 
     override fun toDNA(): String {
@@ -49,10 +54,10 @@ open class Neuron : HasValue, HasDNA {
     }
 
     fun updateCoefsFromDNA(dna: String) {
-        val split = dna.ifEmpty() { "0" }.split(DNA.Separator.COEF.symbol)
+        val split = dna.ifEmpty() { "0/0" }.split(DNA.Separator.COEF.symbol)
         for (i in split.indices) {
             if (i >= inputs.size) {
-                break;
+                break
             }
             inputs[i].updateCoefFromDNA(split[i])
         }

@@ -6,6 +6,6 @@ package com.treil.kotai
  */
 class DNA {
     enum class Separator(val symbol: Char) {
-        LAYER('L'), NEURON('N'), COEF('C')
+        LAYER('L'), NEURON('N'), COEF('C'), BIAS('/');
     }
 }

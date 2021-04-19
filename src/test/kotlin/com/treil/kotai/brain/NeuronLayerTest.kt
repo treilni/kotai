@@ -24,13 +24,13 @@ internal class NeuronLayerTest {
         val neuron = Neuron()
 
         layer.add(neuron)
-        assertEquals("0C0", neuron.toDNA())
+        assertEquals("0/0C0/0", neuron.toDNA())
         layer.add(Neuron())
         layer.add(Neuron())
-        assertEquals("0C0N0C0N0C0", layer.toDNA())
+        assertEquals("0/0C0/0N0/0C0/0N0/0C0/0", layer.toDNA())
 
         neuron.setAllCoefs(Short.MAX_VALUE)
-        assertEquals("32767C32767N0C0N0C0", layer.toDNA())
+        assertEquals("32767/0C32767/0N0/0C0/0N0/0C0/0", layer.toDNA())
     }
 
     @Test
@@ -40,19 +40,47 @@ internal class NeuronLayerTest {
         val layer = NeuronLayer(inputLayer)
         layer.add(Neuron())
         layer.add(Neuron())
-        assertEquals("0C0N0C0", layer.toDNA())
+        assertEquals("0/0C0/0N0/0C0/0", layer.toDNA())
 
-        layer.updateCoefsFromDNA("1247C-34N-31755C0")
-        assertEquals("1247C-34N-31755C0", layer.toDNA())
+        layer.updateCoefsFromDNA("1247/0C-34/0N-31755/0C0/0")
+        assertEquals("1247/0C-34/0N-31755/0C0/0", layer.toDNA())
+    }
 
-        layer.updateCoefsFromDNA("1247C-34N-31755C0N0C0")
-        assertEquals("1247C-34N-31755C0", layer.toDNA())
+    @Test
+    fun updateCoefsFromDNAWithSpuriousCoef() {
+        val inputLayer = buildInputLayer()
 
-        layer.updateCoefsFromDNA("1247C-34N")
-        assertEquals("1247C-34N0C0", layer.toDNA())
+        val layer = NeuronLayer(inputLayer)
+        layer.add(Neuron())
+        layer.add(Neuron())
+        layer.updateCoefsFromDNA("1247/0C-34/0N-31755/0C0/0N0/0C0/0")
+        assertEquals("1247/0C-34/0N-31755/0C0/0", layer.toDNA())
+    }
 
-        layer.updateCoefsFromDNA("1247N-31755C0")
-        assertEquals("1247C0N-31755C0", layer.toDNA())
+    @Test
+    fun updateCoefsFromDNAWithMissingCoef() {
+        val inputLayer = buildInputLayer()
+
+        val layer = NeuronLayer(inputLayer)
+        layer.add(Neuron())
+        layer.add(Neuron())
+        layer.updateCoefsFromDNA("1247/0C-34/0N")
+        assertEquals("1247/0C-34/0N0/0C0/0", layer.toDNA())
+
+        layer.updateCoefsFromDNA("1247/0N-31755/0C0/0")
+        assertEquals("1247/0C0/0N-31755/0C0/0", layer.toDNA())
+    }
+
+    @Test
+    fun updateCoefsFromDNAWithBias() {
+        val inputLayer = buildInputLayer()
+
+        val layer = NeuronLayer(inputLayer)
+        layer.add(Neuron())
+        layer.add(Neuron())
+
+        layer.updateCoefsFromDNA("1247/1C-34/2N-31755/-5C0/8")
+        assertEquals("1247/1C-34/2N-31755/-5C0/8", layer.toDNA())
     }
 
     private fun buildInputLayer(): InputLayer {
