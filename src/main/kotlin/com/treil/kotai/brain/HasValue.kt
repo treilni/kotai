@@ -7,3 +7,5 @@ package com.treil.kotai.brain
 interface HasValue {
     val value: Short
 }
+
+class StaticValue(override val value: Short) : HasValue

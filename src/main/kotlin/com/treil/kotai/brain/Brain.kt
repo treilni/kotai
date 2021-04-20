@@ -40,4 +40,23 @@ class Brain(inputLayer: InputLayer, vararg layerSizes: Int) : HasDNA {
     fun compute() {
         layers.forEach { layer -> layer.compute() }
     }
+
+    fun getSplittedOutput(outputSizes: List<Int>): MutableList<InputLayer> {
+        val outLayer = layers[layers.lastIndex]
+        val result = ArrayList<InputLayer>()
+        var i = 0
+        for (outputSize in outputSizes) {
+            val inputLayer = InputLayer()
+            for (k in 0..outputSize) {
+                val output = outLayer.elements.getOrNull(i++)
+                if (output != null) {
+                    inputLayer.add(output)
+                } else {
+                    inputLayer.add(StaticValue(0))
+                }
+            }
+            result.add(inputLayer)
+        }
+        return result
+    }
 }

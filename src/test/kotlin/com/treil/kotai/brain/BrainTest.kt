@@ -17,8 +17,8 @@ internal class BrainTest {
     @Test
     fun toDNA() {
         val inputLayer = InputLayer()
-        inputLayer.add(NeuronTest.StaticValue(3))
-        inputLayer.add(NeuronTest.StaticValue(5))
+        inputLayer.add(StaticValue(3))
+        inputLayer.add(StaticValue(5))
 
         val brain = Brain(inputLayer, 2, 3)
 
@@ -28,8 +28,8 @@ internal class BrainTest {
     @Test
     fun fromDNA() {
         val inputLayer = InputLayer()
-        inputLayer.add(NeuronTest.StaticValue(3))
-        inputLayer.add(NeuronTest.StaticValue(5))
+        inputLayer.add(StaticValue(3))
+        inputLayer.add(StaticValue(5))
 
         val dna = "1111/0C2222/0N3333/0C4444/0L5555/0C6666/0N7777/0C8888/0N9999/0C8765/0"
         val brain = Brain(inputLayer, dna)
@@ -40,8 +40,8 @@ internal class BrainTest {
     @Test
     fun mutate() {
         val inputLayer = InputLayer()
-        inputLayer.add(NeuronTest.StaticValue(0))
-        inputLayer.add(NeuronTest.StaticValue(0))
+        inputLayer.add(StaticValue(0))
+        inputLayer.add(StaticValue(0))
 
         val mutator = TestMutator()
         val brain = Brain(inputLayer, dna = "0/0C0/0N0/0C0/0L0/0C0/0N0/0C0/0N0/0C0/0")

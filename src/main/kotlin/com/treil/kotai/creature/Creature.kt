@@ -5,22 +5,33 @@ import com.treil.kotai.brain.InputLayer
 import com.treil.kotai.world.Direction
 import com.treil.kotai.world.Thing
 import com.treil.kotai.world.World
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
-open class Creature(initialEnergy: Int) : Thing() {
+open class Creature(val name: String, initialEnergy: Int) : Thing() {
+    companion object {
+        val logger: Logger = LoggerFactory.getLogger(Creature::class.java.simpleName)
+    }
+
     private val sensors: MutableList<Sensor> = ArrayList()
     private val actuators: MutableList<Actuator> = ArrayList()
     private var brain: Brain = Brain(InputLayer(), 0, 0) // temporary empty brain
     var facing = Direction()
+    var dead = false
 
     private val energyManager = object : EnergyManager(initialEnergy) {
         override fun isDead() {
-            TODO("Manage death")
+            logger.info("Creature $name died")
+            dead = true
         }
     }
 
     fun liveOneTick(world: World) {
-        sensors.forEach { sensor -> sensor.computeValue(world, this) }
-        actuators.forEach { actuator -> actuator.act(world, this) }
+        if (!dead) {
+            sensors.forEach { sensor -> sensor.computeValue(world, this) }
+            actuators.forEach { actuator -> actuator.act(world, this) }
+            energyManager.useEnergy(1)
+        }
     }
 
     fun addComponent(sensor: Sensor) {
@@ -31,10 +42,28 @@ open class Creature(initialEnergy: Int) : Thing() {
         actuators.add(actuator)
     }
 
-    fun wireBrain(vararg layerSizes: Int) {
+    fun wireBrain(vararg innerLayerSizes: Int) {
         // Assemble Input layer
         val inputLayer = InputLayer()
         sensors.forEach { sensor -> sensor.inputs.forEach { input -> inputLayer.add(input) } }
+
+        val layerSizes: IntArray = innerLayerSizes.copyOf(innerLayerSizes.size + 1)
+        // Add last layer for acgtuators
+        val outputSize = actuators.fold(0) { acc, actuator -> acc + actuator.inputSize }
+        layerSizes[layerSizes.lastIndex] = outputSize
+
+        // create brain
         brain = Brain(inputLayer, *layerSizes)
+
+        // wire actuators
+        val outputSizes = actuators.map { actuator: Actuator -> actuator.inputSize }
+        val actuatorsInputs = brain.getSplittedOutput(outputSizes)
+        for ((index, value) in actuators.withIndex()) {
+            value.inputLayer = actuatorsInputs[index]
+        }
+    }
+
+    fun depleteEnergy(i: Int) {
+        energyManager.useEnergy(i)
     }
 }

@@ -1,6 +1,23 @@
 package com.treil.kotai.world
 
-open class Point2D(val x: Int, val y: Int)
+open class Point2D(val x: Int, val y: Int) {
+    override fun equals(other: Any?): Boolean {
+        if (other is Point2D) {
+            return x == other.x && y == other.y
+        }
+        return false
+    }
+
+    override fun toString(): String {
+        return "Point2D(x=$x, y=$y)"
+    }
+
+    override fun hashCode(): Int {
+        var result = x
+        result = 31 * result + y
+        return result
+    }
+}
 
 class Location(x: Int, y: Int) : Point2D(x, y) {
     private var occupant: Thing? = null
@@ -24,4 +41,11 @@ class Location(x: Int, y: Int) : Point2D(x, y) {
     fun getOccupant(): Thing? {
         return occupant
     }
+
+    override fun toString(): String {
+        val s = super.toString()
+        return "Location(point=$s)"
+    }
+
+
 }

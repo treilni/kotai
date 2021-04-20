@@ -16,8 +16,6 @@ internal class NeuronTest {
         val logger: Logger = LoggerFactory.getLogger(Application::class.java.simpleName)
     }
 
-    class StaticValue(override val value: Short) : HasValue
-
     @Test
     fun testSingleOutput() {
         val three: HasValue = StaticValue(3)

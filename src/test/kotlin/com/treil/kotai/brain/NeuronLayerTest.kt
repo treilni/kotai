@@ -1,6 +1,5 @@
 package com.treil.kotai.brain
 
-import com.treil.kotai.Application
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.slf4j.Logger
@@ -85,8 +84,8 @@ internal class NeuronLayerTest {
 
     private fun buildInputLayer(): InputLayer {
         val inputLayer = InputLayer()
-        inputLayer.add(NeuronTest.StaticValue(4))
-        inputLayer.add(NeuronTest.StaticValue(6))
+        inputLayer.add(StaticValue(4))
+        inputLayer.add(StaticValue(6))
         return inputLayer
     }
 }

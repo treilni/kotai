@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory
  * Direction in degrees
  */
 class Direction(private var degrees: Short = 0) {
+    constructor(other: Direction) : this(other.degrees)
+
     companion object {
         val logger: Logger = LoggerFactory.getLogger(Direction::class.java.simpleName)
     }
@@ -30,6 +32,12 @@ class Direction(private var degrees: Short = 0) {
         }
     }
 
+    fun opposite(): Direction {
+        val result = Direction(degrees)
+        result.add(180)
+        return result
+    }
+
     fun add(deltaDegrees: Short) {
         var result = (degrees + deltaDegrees) % 360
         if (result < 0) result += 360
@@ -40,4 +48,24 @@ class Direction(private var degrees: Short = 0) {
         val (dx, dy) = getDelta()
         return Point2D(point2D.x + dx, point2D.y + dy)
     }
+
+    override fun toString(): String {
+        return "Direction(degrees=$degrees)"
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Direction
+        if (degrees != other.degrees) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return degrees.toInt()
+    }
+
+
 }

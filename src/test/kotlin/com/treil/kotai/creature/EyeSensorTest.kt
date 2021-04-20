@@ -13,7 +13,7 @@ internal class EyeSensorTest {
     @Test
     fun computeValue() {
         val world = World(10, 10)
-        val creature = Creature(100)
+        val creature = Creature("TEST", 100)
         val eyeSensor = EyeSensor()
 
         world.placeThingAt(creature, 2, 8)
