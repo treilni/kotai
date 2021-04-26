@@ -20,7 +20,7 @@ fun main() {
     val world = World(20, 20)
     val dna = "-7/-1213N-12707/-29040L-16235/-24260C717/-22492N16654/17873C-14970/12566"
     val scoreKeeper = MovementScoreKeeper()
-    val ant = Ant(scoreKeeper, 50)
+    val ant = Ant(scoreKeeper, 100)
     ant.getBrain().setDNA(dna)
     world.placeThingAtRandom(ant, random)
     while (!ant.dead) {

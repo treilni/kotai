@@ -20,8 +20,8 @@ class DirectionActuator(scoreKeeper: ScoreKeeper) : Actuator(scoreKeeper) {
             val newDirection = Direction(creature.facing)
             newDirection.add(deltaDegrees.toShort())
             creature.facing = newDirection
-            if (logger.isDebugEnabled) {
-                logger.debug("Changed facing $oldFacing [$deltaDegrees] -> ${creature.facing.getDegrees()}")
+            if (logger.isTraceEnabled) {
+                logger.trace("Changed facing $oldFacing [$deltaDegrees] -> ${creature.facing.getDegrees()}")
             }
         }
     }

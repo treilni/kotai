@@ -10,7 +10,7 @@ import kotlin.random.Random
  * @author Nicolas
  * @since 19/04/2021.
  */
-class World(val width: Int, val height: Int) {
+class World(val width: Int, val height: Int, obstaclePercent: Int = 0) {
     companion object {
         val logger: Logger = LoggerFactory.getLogger(World::class.java.simpleName)
     }
@@ -29,6 +29,18 @@ class World(val width: Int, val height: Int) {
             } else {
                 arrayOfLocations[0].setOccupant(Obstacle())
                 arrayOfLocations[arrayOfLocations.lastIndex].setOccupant(Obstacle())
+            }
+        }
+
+        // single obstacles
+        val obstacles = (width - 2) * (height - 2) * obstaclePercent / 100
+        val random = Random(0)
+        repeat(obstacles) {
+            val x = random.nextInt(1, width - 2)
+            val y = random.nextInt(1, height - 2)
+            try {
+                placeThingAt(Obstacle(), x, y)
+            } catch (ignored: java.lang.Exception) {
             }
         }
     }

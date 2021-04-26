@@ -103,7 +103,7 @@ fun main(args: Array<String>) {
     val size = args[0].toInt()
     val dnaBank = DNABank(size, Ant(MovementScoreKeeper()))
 
-    val world = World(20, 20)
+    val world = World(20, 20, 7)
     for (i in 1..EvolutionConstants.CYCLES) {
         for (dna in dnaBank.getDnas()) {
             val random = Random(0)

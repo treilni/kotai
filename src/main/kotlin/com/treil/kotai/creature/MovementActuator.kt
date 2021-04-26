@@ -46,13 +46,13 @@ class MovementActuator(scoreKeeper: ScoreKeeper) : Actuator(scoreKeeper) {
             var direction = creature.facing
             val speed = valueTable[v - Short.MIN_VALUE]
             if (v >= 0) {
-                if (logger.isDebugEnabled) {
-                    logger.debug("Moving to ${creature.facing} $speed times")
+                if (logger.isTraceEnabled) {
+                    logger.trace("Moving to ${creature.facing} $speed times")
                 }
             } else {
                 direction = direction.opposite()
-                if (logger.isDebugEnabled) {
-                    logger.debug("Moving to ${creature.facing} ${-speed} times")
+                if (logger.isTraceEnabled) {
+                    logger.trace("Moving to ${creature.facing} ${-speed} times")
                 }
             }
 
