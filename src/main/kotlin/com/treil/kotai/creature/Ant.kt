@@ -11,6 +11,6 @@ class Ant(scoreKeeper: ScoreKeeper, initialEnergy: Int = 100) : Creature("Ant", 
         addComponent(EyeSensor())
         addComponent(DirectionActuator(scoreKeeper))
         addComponent(MovementActuator(scoreKeeper))
-        wireBrain(4)
+        wireBrain(2)
     }
 }

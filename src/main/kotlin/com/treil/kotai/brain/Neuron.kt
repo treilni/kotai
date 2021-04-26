@@ -58,8 +58,8 @@ open class Neuron : HasValue, HasDNA {
         val normalized = fold.toDouble() / Constants.NORMALIZATION_FACTOR
         val result = Constants.MIN_OUT + (Constants.OUT_RANGE / (1.0 + Math.exp(-normalized)))
         value = Math.round(result).toShort()
-        if (logger.isDebugEnabled) {
-            logger.debug("Computed $value for $this")
+        if (logger.isTraceEnabled) {
+            logger.trace("Computed $value for $this")
         }
     }
 

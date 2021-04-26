@@ -11,12 +11,16 @@ import kotlin.random.Random
 /**
  * @author Nicolas
  * @since 23/04/2021.
+ *
+ * -7/-1213N-12707/-29040L-16235/-24260C717/-22492N16654/17873C-14970/12566 (1201)
  */
 data class DNAScore(val dna: String, var score: Int = 0, var generation: Int = 1)
 
 object EvolutionConstants {
     const val KEPT_PERCENT = 10
-    const val SAMPLES_PER_DNA = 25
+    const val SAMPLES_PER_DNA = 10
+
+    const val CYCLES = 100000
 }
 
 val logger: Logger = LoggerFactory.getLogger(DNABank::class.java.simpleName)
@@ -25,6 +29,7 @@ class DNABank(val size: Int, val sampleCreature: Creature) {
 
     private val dnaScores: MutableList<DNAScore> = ArrayList()
     private val fromDna: MutableMap<String, DNAScore> = HashMap()
+
     private val mutator = RandomMutator()
 
     init {
@@ -96,18 +101,16 @@ class DNABank(val size: Int, val sampleCreature: Creature) {
 
 fun main(args: Array<String>) {
     val size = args[0].toInt()
-    val ticks = args[1].toInt()
     val dnaBank = DNABank(size, Ant(MovementScoreKeeper()))
 
     val world = World(20, 20)
-    for (i in 1..ticks) {
-        logger.info("Starting round $i")
+    for (i in 1..EvolutionConstants.CYCLES) {
         for (dna in dnaBank.getDnas()) {
             val random = Random(0)
             var totalScore = 0
             repeat(EvolutionConstants.SAMPLES_PER_DNA) {
                 val scoreKeeper = MovementScoreKeeper()
-                val ant = Ant(scoreKeeper, )
+                val ant = Ant(scoreKeeper, 50)
                 ant.getBrain().setDNA(dna)
                 world.placeThingAtRandom(ant, random)
                 while (!ant.dead) {
@@ -119,7 +122,9 @@ fun main(args: Array<String>) {
             dnaBank.setScore(dna, totalScore / EvolutionConstants.SAMPLES_PER_DNA)
         }
         val best = dnaBank.getBestDNA()
-        logger.info(" Best DNA scored ${best.score} (generation=${best.generation} dna=${best.dna})")
+        if (i % 100 == 0) {
+            logger.info("Round $i Best DNA scored ${best.score} (generation=${best.generation} dna=${best.dna})")
+        }
         dnaBank.mutate()
     }
 }

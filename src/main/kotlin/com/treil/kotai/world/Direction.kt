@@ -67,5 +67,9 @@ class Direction(private var degrees: Short = 0) {
         return degrees.toInt()
     }
 
+    fun getDegrees(): Short {
+        return degrees
+    }
+
 
 }

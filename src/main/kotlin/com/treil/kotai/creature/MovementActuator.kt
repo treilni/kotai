@@ -22,6 +22,13 @@ object MvtConstants {
 class MovementActuator(scoreKeeper: ScoreKeeper) : Actuator(scoreKeeper) {
     companion object {
         val logger: Logger = LoggerFactory.getLogger(MovementActuator::class.java.simpleName)
+        val valueTable: Array<Int> = Array(Short.MAX_VALUE - Short.MIN_VALUE + 1) { i ->
+            val v = i + Short.MIN_VALUE
+            if (v >= 0)
+                return@Array (MvtConstants.APOSITIVE * (ln(v.toDouble() + 1.0))).toInt()
+            else
+                return@Array (MvtConstants.ANEGATIVE * (ln(-v.toDouble() + 1.0))).toInt()
+        }
     }
 
     override fun act(world: World, creature: Creature) {
@@ -32,34 +39,38 @@ class MovementActuator(scoreKeeper: ScoreKeeper) : Actuator(scoreKeeper) {
         }
         val hasValue = inputLayer?.elements?.get(0)
         if (hasValue != null) {
-            if (logger.isDebugEnabled) {
-                logger.debug("Got ${hasValue.value} from $hasValue")
+            if (logger.isTraceEnabled) {
+                logger.trace("Got ${hasValue.value} from $hasValue")
             }
             val v = hasValue.value.toInt()
             var direction = creature.facing
-            val speed: Int
+            val speed = valueTable[v - Short.MIN_VALUE]
             if (v >= 0) {
-                speed = (MvtConstants.APOSITIVE * (ln(v.toDouble() + 1.0))).toInt()
+                if (logger.isDebugEnabled) {
+                    logger.debug("Moving to ${creature.facing} $speed times")
+                }
             } else {
-                speed = (MvtConstants.ANEGATIVE * (ln(-v.toDouble() + 1.0))).toInt()
                 direction = direction.opposite()
+                if (logger.isDebugEnabled) {
+                    logger.debug("Moving to ${creature.facing} ${-speed} times")
+                }
             }
 
             if (speed != 0) {
-                if (logger.isDebugEnabled) {
-                    logger.debug("Moving $position to $direction $speed times")
-                }
                 repeat(speed) {
                     position = position?.let { direction.move(it) }
                 }
                 if (position != null) {
+                    val pos = position!!
                     try {
-                        world.placeThingAt(creature, position!!.x, position!!.y)
-                        logger.debug("placed $creature at ${position?.x}, ${position?.y}")
-                        scoreKeeper.successfulMove(speed, position!!.x, position!!.y)
+                        world.placeThingAt(creature, pos.x, pos.y)
+                        if (logger.isDebugEnabled)
+                            logger.debug("placed $creature at ${position?.x},${position?.y}")
+                        scoreKeeper.successfulMove(speed, pos.x, pos.y)
                     } catch (e: Exception) {
-                        logger.debug("Failed placing $creature at ${position?.x}, ${position?.y}")
-                        scoreKeeper.unsuccessfullMove(speed)
+                        if (logger.isDebugEnabled)
+                            logger.debug("Failed placing $creature at ${position?.x},${position?.y}")
+                        scoreKeeper.unsuccessfulMove(speed)
                     }
                 }
             } else {

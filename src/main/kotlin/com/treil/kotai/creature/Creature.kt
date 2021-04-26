@@ -21,7 +21,8 @@ open class Creature(val name: String, initialEnergy: Int) : Thing() {
 
     private val energyManager = object : EnergyManager(initialEnergy) {
         override fun isDead() {
-            logger.debug("Creature $name died")
+            if (logger.isDebugEnabled)
+                logger.debug("Creature $name died")
             dead = true
         }
     }

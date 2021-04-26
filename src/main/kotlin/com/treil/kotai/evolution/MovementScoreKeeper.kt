@@ -26,7 +26,7 @@ class MovementScoreKeeper : ScoreKeeper(0) {
         // slight direction change are encouraged ?
     }
 
-    override fun unsuccessfullMove(speed: Int) {
+    override fun unsuccessfulMove(speed: Int) {
         score += BLOCKED_PENALTY
     }
 

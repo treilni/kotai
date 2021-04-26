@@ -56,7 +56,8 @@ class World(val width: Int, val height: Int) {
                 placeThingAt(ant, random.nextInt(0, width), random.nextInt(0, height))
                 return
             } catch (e: Exception) {
-                logger.debug("Could not place thing", e)
+                if (logger.isDebugEnabled)
+                    logger.debug("Could not place thing", e)
             }
         }
     }
