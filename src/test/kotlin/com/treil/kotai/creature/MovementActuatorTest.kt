@@ -4,6 +4,7 @@ import ch.qos.logback.classic.Level
 import ch.qos.logback.classic.Logger
 import com.treil.kotai.brain.InputLayer
 import com.treil.kotai.brain.StaticValue
+import com.treil.kotai.evolution.MovementScoreKeeper
 import com.treil.kotai.world.Point2D
 import com.treil.kotai.world.World
 import org.junit.jupiter.api.Test
@@ -26,7 +27,7 @@ internal class MovementActuatorTest {
         val creature = Creature("TEST", 100)
         world.placeThingAt(creature, 5, 5)
 
-        val actuator = MovementActuator()
+        val actuator = MovementActuator(MovementScoreKeeper())
         val inputLayer = InputLayer()
         inputLayer.elements.add(StaticValue(0))
         actuator.inputLayer = inputLayer

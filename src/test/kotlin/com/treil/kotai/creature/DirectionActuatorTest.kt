@@ -2,6 +2,7 @@ package com.treil.kotai.creature
 
 import com.treil.kotai.brain.InputLayer
 import com.treil.kotai.brain.StaticValue
+import com.treil.kotai.evolution.MovementScoreKeeper
 import com.treil.kotai.world.Direction
 import com.treil.kotai.world.World
 import org.junit.jupiter.api.Test
@@ -20,7 +21,7 @@ internal class DirectionActuatorTest {
         world.placeThingAt(creature, 5, 5)
         creature.facing = Direction(45)
 
-        val actuator = DirectionActuator()
+        val actuator = DirectionActuator(MovementScoreKeeper())
         val inputLayer = InputLayer()
         inputLayer.elements.add(StaticValue(0))
         actuator.inputLayer = inputLayer

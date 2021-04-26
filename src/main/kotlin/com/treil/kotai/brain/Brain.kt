@@ -1,10 +1,15 @@
 package com.treil.kotai.brain
 
+import kotlin.random.Random
+
 /**
  * @author Nicolas
  * @since 17/04/2021.
  */
+val random = Random(0)
+
 class Brain(inputLayer: InputLayer, vararg layerSizes: Int) : HasDNA {
+
     private val layers: MutableList<NeuronLayer>
 
     constructor(inputLayer: InputLayer, dna: String) : this(inputLayer) {
@@ -47,7 +52,7 @@ class Brain(inputLayer: InputLayer, vararg layerSizes: Int) : HasDNA {
         var i = 0
         for (outputSize in outputSizes) {
             val inputLayer = InputLayer()
-            for (k in 0..outputSize) {
+            for (k in 0 until outputSize) {
                 val output = outLayer.elements.getOrNull(i++)
                 if (output != null) {
                     inputLayer.add(output)
@@ -58,5 +63,19 @@ class Brain(inputLayer: InputLayer, vararg layerSizes: Int) : HasDNA {
             result.add(inputLayer)
         }
         return result
+    }
+
+    fun setDNA(dna: String) {
+        val layersDNA = dna.split(DNA.Type.LAYER.symbol)
+        for ((index, value) in layersDNA.withIndex()) {
+            layers[index].updateCoefsFromDNA(value)
+        }
+    }
+
+    fun getRandomDNA(): String {
+        val dna = toDNA()
+        return dna.replace(Regex("-?[0-9]+")) { _ ->
+            random.nextInt(Short.MIN_VALUE.toInt(), Short.MAX_VALUE.toInt() + 1).toString()
+        }
     }
 }

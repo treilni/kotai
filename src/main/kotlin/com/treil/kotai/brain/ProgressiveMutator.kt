@@ -9,7 +9,7 @@ import kotlin.random.Random
  * @author Nicolas
  * @since 19/04/2021.
  */
-class ProgressiveMutator(seed: Int = 0) : Mutator {
+open class ProgressiveMutator(seed: Int = 0) : Mutator {
     val random = Random(seed)
 
     companion object {

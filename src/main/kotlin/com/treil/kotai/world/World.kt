@@ -1,8 +1,10 @@
 package com.treil.kotai.world
 
+import com.treil.kotai.creature.Ant
 import com.treil.kotai.creature.Creature
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import kotlin.random.Random
 
 /**
  * @author Nicolas
@@ -46,5 +48,20 @@ class World(val width: Int, val height: Int) {
 
     fun getLocation(x: Int, y: Int): Location? {
         return locations.getOrNull(y)?.getOrNull(x)
+    }
+
+    fun placeThingAtRandom(ant: Ant, random: Random) {
+        while (true) {
+            try {
+                placeThingAt(ant, random.nextInt(0, width), random.nextInt(0, height))
+                return
+            } catch (e: Exception) {
+                logger.debug("Could not place thing", e)
+            }
+        }
+    }
+
+    fun removeThing(creature: Creature) {
+        creature.location?.removeOccupant()
     }
 }

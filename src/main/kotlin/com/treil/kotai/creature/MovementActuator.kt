@@ -1,16 +1,25 @@
 package com.treil.kotai.creature
 
+import com.treil.kotai.evolution.ScoreKeeper
 import com.treil.kotai.world.Point2D
 import com.treil.kotai.world.World
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import kotlin.math.ln
 
 object MvtConstants {
-    const val MIN_MOVE = -1
-    const val MAX_MOVE = 2
+    private const val MIN_MOVE = -1
+    private const val MAX_MOVE = 2
+
+    /* f(v) = a * log(v + 1) + b
+    *  f(0) = b = 0
+    *  f(MAX_VALUE) = a * log(MAX_VALUE + 1) = MAX_MOVE
+    * */
+    val APOSITIVE = MAX_MOVE.toDouble() / ln(Short.MAX_VALUE.toDouble() + 1)
+    val ANEGATIVE = -MIN_MOVE.toDouble() / ln(-(Short.MIN_VALUE.toDouble()) + 1)
 }
 
-class MovementActuator : Actuator() {
+class MovementActuator(scoreKeeper: ScoreKeeper) : Actuator(scoreKeeper) {
     companion object {
         val logger: Logger = LoggerFactory.getLogger(MovementActuator::class.java.simpleName)
     }
@@ -23,13 +32,16 @@ class MovementActuator : Actuator() {
         }
         val hasValue = inputLayer?.elements?.get(0)
         if (hasValue != null) {
+            if (logger.isDebugEnabled) {
+                logger.debug("Got ${hasValue.value} from $hasValue")
+            }
             val v = hasValue.value.toInt()
             var direction = creature.facing
-            var speed: Int
+            val speed: Int
             if (v >= 0) {
-                speed = (v * (MvtConstants.MAX_MOVE + 1)) / (Short.MAX_VALUE + 1)
+                speed = (MvtConstants.APOSITIVE * (ln(v.toDouble() + 1.0))).toInt()
             } else {
-                speed = (-v * (MvtConstants.MIN_MOVE - 1)) / (Short.MIN_VALUE - 1)
+                speed = (MvtConstants.ANEGATIVE * (ln(-v.toDouble() + 1.0))).toInt()
                 direction = direction.opposite()
             }
 
@@ -37,11 +49,18 @@ class MovementActuator : Actuator() {
                 if (logger.isDebugEnabled) {
                     logger.debug("Moving $position to $direction $speed times")
                 }
-                while (speed-- > 0) {
+                repeat(speed) {
                     position = position?.let { direction.move(it) }
                 }
                 if (position != null) {
-                    world.placeThingAt(creature, position.x, position.y)
+                    try {
+                        world.placeThingAt(creature, position!!.x, position!!.y)
+                        logger.debug("placed $creature at ${position?.x}, ${position?.y}")
+                        scoreKeeper.successfulMove(speed, position!!.x, position!!.y)
+                    } catch (e: Exception) {
+                        logger.debug("Failed placing $creature at ${position?.x}, ${position?.y}")
+                        scoreKeeper.unsuccessfullMove(speed)
+                    }
                 }
             } else {
                 if (logger.isDebugEnabled) {

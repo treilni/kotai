@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory
 internal class NeuronTest {
     companion object {
         @Suppress("unused")
-        val logger: Logger = LoggerFactory.getLogger(Application::class.java.simpleName)
+        val logger: Logger = LoggerFactory.getLogger(NeuronTest::class.java.simpleName)
     }
 
     @Test

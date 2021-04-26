@@ -1,17 +1,24 @@
 package com.treil.kotai.brain
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+
 /**
  * @author Nicolas
  * @since 15/04/2021.
  */
 
 object Constants {
-    const val NORMALIZATION_FACTOR = Short.MAX_VALUE.toDouble() * Short.MAX_VALUE.toDouble() / 100.0
+    const val NORMALIZATION_FACTOR = Short.MAX_VALUE.toDouble()
     const val MIN_OUT = Short.MIN_VALUE.toDouble()
     const val OUT_RANGE = Short.MAX_VALUE.toDouble() - Short.MIN_VALUE.toDouble()
 }
 
 open class Neuron : HasValue, HasDNA {
+    companion object {
+        val logger: Logger = LoggerFactory.getLogger(Neuron::class.java.simpleName)
+    }
+
     class Input(private val input: HasValue, var coef: Short, var bias: Short) : HasDNA {
         private val DNA_SIZE = Short.SIZE_BYTES * 2
 
@@ -51,6 +58,9 @@ open class Neuron : HasValue, HasDNA {
         val normalized = fold.toDouble() / Constants.NORMALIZATION_FACTOR
         val result = Constants.MIN_OUT + (Constants.OUT_RANGE / (1.0 + Math.exp(-normalized)))
         value = Math.round(result).toShort()
+        if (logger.isDebugEnabled) {
+            logger.debug("Computed $value for $this")
+        }
     }
 
     fun addInput(value: HasValue, coef: Short = 0, bias: Short = 0) {

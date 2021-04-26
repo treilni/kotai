@@ -52,4 +52,13 @@ internal class BrainTest {
         logger.info("-----------------")
         assertEquals("0/0C0/0N0/10C0/0L0/0C-5/0N0/0C0/0N0/0C0/0", brain.toDNA())
     }
+
+    @Test
+    internal fun randomDNA() {
+        val inputLayer = InputLayer()
+        inputLayer.add(StaticValue(0))
+        inputLayer.add(StaticValue(0))
+        val brain = Brain(inputLayer, 2, 3)
+        logger.info(brain.getRandomDNA())
+    }
 }

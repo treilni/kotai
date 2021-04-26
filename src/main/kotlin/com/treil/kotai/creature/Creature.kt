@@ -21,7 +21,7 @@ open class Creature(val name: String, initialEnergy: Int) : Thing() {
 
     private val energyManager = object : EnergyManager(initialEnergy) {
         override fun isDead() {
-            logger.info("Creature $name died")
+            logger.debug("Creature $name died")
             dead = true
         }
     }
@@ -29,6 +29,7 @@ open class Creature(val name: String, initialEnergy: Int) : Thing() {
     fun liveOneTick(world: World) {
         if (!dead) {
             sensors.forEach { sensor -> sensor.computeValue(world, this) }
+            brain.compute()
             actuators.forEach { actuator -> actuator.act(world, this) }
             energyManager.useEnergy(1)
         }
@@ -65,5 +66,9 @@ open class Creature(val name: String, initialEnergy: Int) : Thing() {
 
     fun depleteEnergy(i: Int) {
         energyManager.useEnergy(i)
+    }
+
+    fun getBrain(): Brain {
+        return brain
     }
 }
