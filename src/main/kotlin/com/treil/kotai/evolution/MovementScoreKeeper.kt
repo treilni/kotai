@@ -6,15 +6,19 @@ package com.treil.kotai.evolution
  */
 class MovementScoreKeeper : ScoreKeeper(0) {
     companion object {
-        const val DISTANCE_SCORE = 10
+        const val MOVE_SCORE = 10
+        const val REVERSE_MOVE_SCORE = 3
         const val DISCOVERY_SCORE = 5
         const val BLOCKED_PENALTY = -1
     }
 
     val visited: MutableSet<String> = HashSet()
 
-    override fun successfulMove(distance: Int, x: Int, y: Int) {
-        score += distance * DISTANCE_SCORE
+    override fun successfulMove(speed: Int, x: Int, y: Int) {
+        if (speed >= 0)
+            score += MOVE_SCORE
+        else
+            score += REVERSE_MOVE_SCORE
         val locationKey = x.toString() + "/" + y.toString()
         if (!visited.contains(locationKey)) {
             visited.add(locationKey)

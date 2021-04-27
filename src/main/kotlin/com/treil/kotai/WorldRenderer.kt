@@ -14,6 +14,7 @@ import javafx.scene.Node
 import javafx.scene.paint.Color
 import javafx.scene.shape.Polygon
 import javafx.scene.shape.Rectangle
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import kotlin.concurrent.thread
 import kotlin.random.Random
@@ -35,10 +36,10 @@ object RenderingConstants {
 }
 
 class WorldRenderer : GameApplication() {
-    val movingEntities: MutableMap<Creature, Entity> = HashMap()
+    private val movingEntities: MutableMap<Creature, Entity> = HashMap()
 
     companion object {
-        val logger = LoggerFactory.getLogger(WorldRenderer::class.java.getSimpleName())
+        val logger: Logger = LoggerFactory.getLogger(WorldRenderer::class.java.simpleName)
     }
 
     override fun initSettings(settings: GameSettings?) {
@@ -79,24 +80,21 @@ class WorldRenderer : GameApplication() {
                         .buildAndAttach()
                 }
                 if (occupant is Ant) {
-                    movingEntities.put(
-                        occupant,
-                        FXGL.entityBuilder()
-                            .rotationOrigin(RenderingConstants.SCALE / 2 + 0.5, RenderingConstants.SCALE / 2 + 0.5)
-                            .rotate(occupant.facing.getStepDegrees().toDouble())
-                            .at(renderX(x), renderY(y))
-                            .view(renderedAnt())
-                            .buildAndAttach()
-                    )
+                    movingEntities[occupant] = FXGL.entityBuilder()
+                        .rotationOrigin(RenderingConstants.SCALE / 2 + 0.5, RenderingConstants.SCALE / 2 + 0.5)
+                        .rotate(occupant.facing.getStepDegrees().toDouble())
+                        .at(renderX(x), renderY(y))
+                        .view(renderedAnt())
+                        .buildAndAttach()
                 }
             }
         }
 
-        val dna = "5916/-4472N-13435/24104L-15599/7925C-2956/-3135N20490/-9976C8018/-26192"
+        val dna = "25654/7150N1550/486L-1128/2592C18022/-15248N29572/10186C-7244/-22057"
         ant.getBrain().setDNA(dna)
         thread(start = true) {
             while (!ant.dead) {
-                Thread.sleep(1000)
+                Thread.sleep(500)
                 ant.liveOneTick(world)
             }
         }

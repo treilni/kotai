@@ -6,10 +6,11 @@ import com.treil.kotai.world.World
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import kotlin.math.ln
+import kotlin.math.sign
 
 object MvtConstants {
     private const val MIN_MOVE = -1
-    private const val MAX_MOVE = 2
+    private const val MAX_MOVE = 1
 
     /* f(v) = a * log(v + 1) + b
     *  f(0) = b = 0
@@ -66,7 +67,7 @@ class MovementActuator(scoreKeeper: ScoreKeeper) : Actuator(scoreKeeper) {
                         world.placeThingAt(creature, pos.x, pos.y)
                         if (logger.isDebugEnabled)
                             logger.debug("placed $creature at ${position?.x},${position?.y}")
-                        scoreKeeper.successfulMove(speed, pos.x, pos.y)
+                        scoreKeeper.successfulMove(speed * v.sign, pos.x, pos.y)
                     } catch (e: Exception) {
                         if (logger.isDebugEnabled)
                             logger.debug("Failed placing $creature at ${position?.x},${position?.y}")
