@@ -22,8 +22,8 @@ class DNABank(val size: Int, val sampleCreature: Creature) {
     private val dnaScores: MutableList<DNAScore> = ArrayList()
     private val fromDna: MutableMap<String, DNAScore> = HashMap()
 
-    private val randomMutator = RandomMutator(EvolutionConstants.MUTATOR_SEED)
-    private val progressiveMutator = ProgressiveMutator(EvolutionConstants.MUTATOR_SEED)
+    private val randomMutator = RandomMutator(Evolution.MUTATOR_SEED)
+    private val progressiveMutator = ProgressiveMutator(Evolution.MUTATOR_SEED)
 
     init {
         repeat(size) {
@@ -49,7 +49,7 @@ class DNABank(val size: Int, val sampleCreature: Creature) {
         }
 
         // Keep x percent
-        val kept = size * EvolutionConstants.KEPT_PERCENT / 100
+        val kept = size * Evolution.KEPT_PERCENT / 100
         val newBank = ArrayList<DNAScore>()
         for (i in 0 until kept) {
             newBank.add(dnaScores[i])

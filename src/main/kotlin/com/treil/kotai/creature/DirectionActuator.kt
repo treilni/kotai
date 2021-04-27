@@ -14,14 +14,14 @@ class DirectionActuator(scoreKeeper: ScoreKeeper) : Actuator(scoreKeeper) {
     override fun act(world: World, creature: Creature) {
         val hasValue = inputLayer?.elements?.get(0)
         if (hasValue != null) {
-            val oldFacing = creature.facing.getDegrees()
+            val oldFacing = creature.facing.getRawDegrees()
             val v = hasValue.value.toInt()
             val deltaDegrees = 45 * v / Short.MAX_VALUE
             val newDirection = Direction(creature.facing)
             newDirection.add(deltaDegrees.toShort())
             creature.facing = newDirection
             if (logger.isTraceEnabled) {
-                logger.trace("Changed facing $oldFacing [$deltaDegrees] -> ${creature.facing.getDegrees()}")
+                logger.trace("Changed facing $oldFacing [$deltaDegrees] -> ${creature.facing.getRawDegrees()}")
             }
         }
     }

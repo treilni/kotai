@@ -10,7 +10,7 @@ import kotlin.random.Random
  *
  * -7/-1213N-12707/-29040L-16235/-24260C717/-22492N16654/17873C-14970/12566 (1201)
  */
-object EvolutionConstants {
+object Evolution {
     const val KEPT_PERCENT = 20
     const val SAMPLES_PER_DNA = 10
     const val WORLD_SIZE = 40
@@ -18,6 +18,13 @@ object EvolutionConstants {
     const val MUTATOR_SEED = 0
 
     const val CYCLES = 5000
+
+    fun createWorld(): World {
+        return World(
+            WORLD_SIZE, WORLD_SIZE,
+            WORLD_OBSTACLES_PCT
+        )
+    }
 }
 
 fun main(args: Array<String>) {
@@ -25,15 +32,15 @@ fun main(args: Array<String>) {
     val dnaBank = DNABank(size, Ant(MovementScoreKeeper()))
 
     val world = World(
-        EvolutionConstants.WORLD_SIZE, EvolutionConstants.WORLD_SIZE,
-        EvolutionConstants.WORLD_OBSTACLES_PCT
+        Evolution.WORLD_SIZE, Evolution.WORLD_SIZE,
+        Evolution.WORLD_OBSTACLES_PCT
     )
     var lastBest = 0
-    for (i in 1..EvolutionConstants.CYCLES) {
+    for (i in 1..Evolution.CYCLES) {
         for (dna in dnaBank.getDnas()) {
             val random = Random(0)
             var totalScore = 0
-            repeat(EvolutionConstants.SAMPLES_PER_DNA) {
+            repeat(Evolution.SAMPLES_PER_DNA) {
                 val scoreKeeper = MovementScoreKeeper()
                 val ant = Ant(scoreKeeper, 100)
                 ant.getBrain().setDNA(dna)
@@ -44,7 +51,7 @@ fun main(args: Array<String>) {
                 world.removeThing(ant)
                 totalScore += scoreKeeper.score
             }
-            dnaBank.setScore(dna, totalScore / EvolutionConstants.SAMPLES_PER_DNA)
+            dnaBank.setScore(dna, totalScore / Evolution.SAMPLES_PER_DNA)
         }
         val best = dnaBank.getBestDNA()
         if (i % 1000 == 0 || lastBest < best.score) {

@@ -67,8 +67,12 @@ class Direction(private var degrees: Short = 0) {
         return degrees.toInt()
     }
 
-    fun getDegrees(): Short {
+    fun getRawDegrees(): Short {
         return degrees
+    }
+
+    fun getStepDegrees(): Short {
+        return (degrees - (degrees % 45)).toShort()
     }
 
 
