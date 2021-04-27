@@ -1,5 +1,7 @@
 package com.treil.kotai.evolution
 
+import com.treil.kotai.brain.Mutator
+import com.treil.kotai.brain.ProgressiveMutator
 import com.treil.kotai.brain.RandomMutator
 import com.treil.kotai.creature.Ant
 import com.treil.kotai.creature.Creature
@@ -17,10 +19,12 @@ import kotlin.random.Random
 data class DNAScore(val dna: String, var score: Int = 0, var generation: Int = 1)
 
 object EvolutionConstants {
-    const val KEPT_PERCENT = 10
+    const val KEPT_PERCENT = 20
     const val SAMPLES_PER_DNA = 10
+    const val WORLD_SIZE = 15
+    const val MUTATOR_SEED = 0
 
-    const val CYCLES = 100000
+    const val CYCLES = 25000
 }
 
 val logger: Logger = LoggerFactory.getLogger(DNABank::class.java.simpleName)
@@ -30,7 +34,8 @@ class DNABank(val size: Int, val sampleCreature: Creature) {
     private val dnaScores: MutableList<DNAScore> = ArrayList()
     private val fromDna: MutableMap<String, DNAScore> = HashMap()
 
-    private val mutator = RandomMutator()
+    private val randomMutator = RandomMutator(EvolutionConstants.MUTATOR_SEED)
+    private val progressiveMutator = ProgressiveMutator(EvolutionConstants.MUTATOR_SEED)
 
     init {
         repeat(size) {
@@ -60,11 +65,12 @@ class DNABank(val size: Int, val sampleCreature: Creature) {
         val newBank = ArrayList<DNAScore>()
         for (i in 0 until kept) {
             newBank.add(dnaScores[i])
-            val (scoredDNA, mutatedDna) = getMutatedDNA(i)
+            val (scoredDNA, mutatedDna) = getMutatedDNA(i, progressiveMutator)
             newBank.add(DNAScore(mutatedDna, 0, scoredDNA.generation + 1))
         }
-        for (i in 0 until size - kept) {
-            val (scoredDNA, mutatedDna) = getMutatedDNA(i)
+        var i = 0
+        while (newBank.size < dnaScores.size) {
+            val (scoredDNA, mutatedDna) = getMutatedDNA(i++, randomMutator)
             newBank.add(DNAScore(mutatedDna, 0, scoredDNA.generation + 1))
         }
 
@@ -77,7 +83,7 @@ class DNABank(val size: Int, val sampleCreature: Creature) {
         }
     }
 
-    private fun getMutatedDNA(i: Int): Pair<DNAScore, String> {
+    private fun getMutatedDNA(i: Int, mutator: Mutator): Pair<DNAScore, String> {
         val brain = sampleCreature.getBrain()
         val scoredDNA = dnaScores[i]
         brain.setDNA(scoredDNA.dna)
@@ -103,7 +109,8 @@ fun main(args: Array<String>) {
     val size = args[0].toInt()
     val dnaBank = DNABank(size, Ant(MovementScoreKeeper()))
 
-    val world = World(20, 20, 7)
+    val world = World(EvolutionConstants.WORLD_SIZE, EvolutionConstants.WORLD_SIZE, 0)
+    var lastBest = 0
     for (i in 1..EvolutionConstants.CYCLES) {
         for (dna in dnaBank.getDnas()) {
             val random = Random(0)
@@ -122,8 +129,9 @@ fun main(args: Array<String>) {
             dnaBank.setScore(dna, totalScore / EvolutionConstants.SAMPLES_PER_DNA)
         }
         val best = dnaBank.getBestDNA()
-        if (i % 100 == 0) {
+        if (i % 1000 == 0 || lastBest < best.score) {
             logger.info("Round $i Best DNA scored ${best.score} (generation=${best.generation} dna=${best.dna})")
+            lastBest = best.score
         }
         dnaBank.mutate()
     }

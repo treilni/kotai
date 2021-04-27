@@ -15,6 +15,10 @@ class TestMutator : Mutator {
         return result
     }
 
+    override fun getMutationCount(): Int {
+        return 1
+    }
+
     override fun getMutatedShort(n: Short, reason: String): Short {
         var unbounded = n.toInt()
         if (tick++ % 2 == 0) unbounded += 10 else unbounded -= 5

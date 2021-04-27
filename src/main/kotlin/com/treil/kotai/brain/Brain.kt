@@ -38,8 +38,10 @@ class Brain(inputLayer: InputLayer, vararg layerSizes: Int) : HasDNA {
     }
 
     override fun mutate(mutator: Mutator) {
-        val layerIndex = mutator.getMutationIndex(layers.size, DNA.Type.LAYER.toString())
-        layers[layerIndex].mutate(mutator)
+        repeat(mutator.getMutationCount()) {
+            val layerIndex = mutator.getMutationIndex(layers.size, DNA.Type.LAYER.toString())
+            layers[layerIndex].mutate(mutator)
+        }
     }
 
     fun compute() {

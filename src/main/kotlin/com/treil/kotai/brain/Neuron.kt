@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory
  */
 
 object Constants {
-    const val NORMALIZATION_FACTOR = Short.MAX_VALUE.toDouble()
+    const val NORMALIZATION_FACTOR = Short.MAX_VALUE.toDouble() * 10.0
     const val MIN_OUT = Short.MIN_VALUE.toDouble()
     const val OUT_RANGE = Short.MAX_VALUE.toDouble() - Short.MIN_VALUE.toDouble()
 }
