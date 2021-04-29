@@ -1,4 +1,5 @@
 package com.treil.kotai.world
 
-class Attribute {
+interface Attribute {
+    val active: Boolean
 }

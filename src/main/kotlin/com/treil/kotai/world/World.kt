@@ -10,25 +10,23 @@ import kotlin.random.Random
  * @author Nicolas
  * @since 19/04/2021.
  */
-class World(val width: Int, val height: Int, obstaclePercent: Int = 0) {
+class World(val width: Int, val height: Int, obstaclePercent: Int = 0, foodPermille: Int = 0) {
     companion object {
         val logger: Logger = LoggerFactory.getLogger(World::class.java.simpleName)
     }
 
     private val locations: Array<Array<Location>> = Array(height) { y -> Array(width) { x -> Location(x, y) } }
-    private var creatures: MutableList<Creature> = ArrayList()
 
     init {
         // Frame world with obstacles
-        for ((index, value) in locations.withIndex()) {
-            val arrayOfLocations = value
+        for ((index, line) in locations.withIndex()) {
             if (index == 0 || index == locations.lastIndex) {
-                for (location in arrayOfLocations) {
+                for (location in line) {
                     location.setOccupant(Obstacle())
                 }
             } else {
-                arrayOfLocations[0].setOccupant(Obstacle())
-                arrayOfLocations[arrayOfLocations.lastIndex].setOccupant(Obstacle())
+                line[0].setOccupant(Obstacle())
+                line[line.lastIndex].setOccupant(Obstacle())
             }
         }
 
@@ -43,6 +41,19 @@ class World(val width: Int, val height: Int, obstaclePercent: Int = 0) {
             } catch (ignored: java.lang.Exception) {
             }
         }
+
+        // food
+        val foods = width * height * foodPermille / 1000
+        repeat(foods) {
+            try {
+                val location = getLocation(random.nextInt(0, width), random.nextInt(0, height))
+                if (location != null && location.getOccupant() == null) {
+                    Food(location)
+                }
+            } catch (ignored: java.lang.Exception) {
+            }
+        }
+
     }
 
     fun placeThingAt(thing: Thing, x: Int, y: Int) {

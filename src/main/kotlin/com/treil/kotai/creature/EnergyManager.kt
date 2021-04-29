@@ -12,6 +12,13 @@ abstract class EnergyManager(private var energy: Int) {
         }
     }
 
+    fun gainEnergy(i: Int) {
+        energy += i
+    }
+
     abstract fun isDead()
+    fun getEnergy(): Int {
+        return energy
+    }
 
 }

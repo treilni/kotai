@@ -9,8 +9,11 @@ import com.treil.kotai.evolution.ScoreKeeper
 class Ant(scoreKeeper: ScoreKeeper, initialEnergy: Int = 100) : Creature("Ant", initialEnergy) {
     init {
         addComponent(EyeSensor())
+        addComponent(LocalSensor())
+
+        addComponent(FeedActuator(scoreKeeper)) // feed before moving :)
         addComponent(DirectionActuator(scoreKeeper))
         addComponent(MovementActuator(scoreKeeper))
-        wireBrain(2)
+        wireBrain(4)
     }
 }

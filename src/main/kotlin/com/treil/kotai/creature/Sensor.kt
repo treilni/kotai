@@ -8,6 +8,8 @@ import com.treil.kotai.world.World
  * @since 20/04/2021.
  */
 abstract class Sensor {
+    data class Value(override var value: Short) : HasValue
+
     val inputs: MutableList<HasValue> = ArrayList()
 
     abstract fun computeValue(world: World, creature: Creature)

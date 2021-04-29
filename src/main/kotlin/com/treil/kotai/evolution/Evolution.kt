@@ -11,18 +11,23 @@ import kotlin.random.Random
  * -7/-1213N-12707/-29040L-16235/-24260C717/-22492N16654/17873C-14970/12566 (1201)
  */
 object Evolution {
-    const val KEPT_PERCENT = 20
-    const val SAMPLES_PER_DNA = 10
-    const val WORLD_SIZE = 40
-    const val WORLD_OBSTACLES_PCT = 7
     const val MUTATOR_SEED = 0
 
-    const val CYCLES = 5000
+    const val KEPT_PERCENT = 20
+    const val SAMPLES_PER_DNA = 5
+    const val CYCLES = 25000
+
+    const val WORLD_SIZE = 20
+    const val WORLD_OBSTACLES_PCT = 7
+    const val WORLD_FOOD_PM = 50
+    const val INITIAL_ENERGY = 200
+
 
     fun createWorld(): World {
         return World(
             WORLD_SIZE, WORLD_SIZE,
-            WORLD_OBSTACLES_PCT
+            WORLD_OBSTACLES_PCT,
+            WORLD_FOOD_PM
         )
     }
 }
@@ -42,7 +47,7 @@ fun main(args: Array<String>) {
             var totalScore = 0
             repeat(Evolution.SAMPLES_PER_DNA) {
                 val scoreKeeper = MovementScoreKeeper()
-                val ant = Ant(scoreKeeper, 100)
+                val ant = Ant(scoreKeeper, Evolution.INITIAL_ENERGY)
                 ant.getBrain().setDNA(dna)
                 world.placeThingAtRandom(ant, random)
                 while (!ant.dead) {

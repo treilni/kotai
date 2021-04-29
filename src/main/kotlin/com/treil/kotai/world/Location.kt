@@ -22,7 +22,7 @@ open class Point2D(val x: Int, val y: Int) {
 class Location(x: Int, y: Int) : Point2D(x, y) {
     private var occupant: Thing? = null
 
-    private val attributes: MutableList<Attribute> = ArrayList()
+    val attributes: MutableList<Attribute> = ArrayList()
 
     fun setOccupant(thing: Thing) {
         if (occupant != null) {
@@ -47,5 +47,7 @@ class Location(x: Int, y: Int) : Point2D(x, y) {
         return "Location(point=$s)"
     }
 
-
+    fun addAttribute(attribute: Attribute) {
+        attributes.add(attribute)
+    }
 }

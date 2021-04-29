@@ -69,7 +69,16 @@ open class Creature(val name: String, initialEnergy: Int) : Thing() {
         energyManager.useEnergy(i)
     }
 
+    fun gainEnergy(i: Int) {
+        energyManager.gainEnergy(i)
+    }
+
+    fun getEnergy(): Int {
+        return energyManager.getEnergy()
+    }
+
     fun getBrain(): Brain {
         return brain
     }
+
 }
