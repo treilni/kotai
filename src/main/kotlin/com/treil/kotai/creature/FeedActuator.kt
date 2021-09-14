@@ -24,13 +24,15 @@ class FeedActuator(scoreKeeper: ScoreKeeper) : Actuator(scoreKeeper) {
         if (logger.isTraceEnabled) {
             logger.trace("Input value : $value")
         }
-        value?.let {
-            if (it > FEED_THRESHOLD) {
+        value?.let { v ->
+            if (v > FEED_THRESHOLD) {
                 val location = creature.location
                 if (location != null) {
                     location.attributes
                         .filterIsInstance<Food>()
-                        .firstOrNull()?.deplete(SPOON)?.let {
+                        .firstOrNull()
+                        ?.deplete(SPOON)
+                        ?.let {
                             if (logger.isTraceEnabled)
                                 logger.trace("Found food : $it energy")
                             creature.gainEnergy(it)

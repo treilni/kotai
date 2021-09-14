@@ -1,5 +1,6 @@
 package com.treil.kotai.creature
 
+import com.treil.kotai.evolution.MovementScoreKeeper
 import com.treil.kotai.world.World
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
@@ -13,7 +14,7 @@ internal class EyeSensorTest {
     @Test
     fun computeValue() {
         val world = World(10, 10)
-        val creature = Creature("TEST", 100)
+        val creature = Creature("TEST", 100, MovementScoreKeeper())
         val eyeSensor = LocalSensor()
 
         world.placeThingAt(creature, 2, 8)

@@ -1,5 +1,8 @@
 package com.treil.kotai.world
 
+import java.lang.Integer.min
+import kotlin.math.abs
+
 open class Point2D(val x: Int, val y: Int) {
     override fun equals(other: Any?): Boolean {
         if (other is Point2D) {
@@ -8,15 +11,15 @@ open class Point2D(val x: Int, val y: Int) {
         return false
     }
 
-    override fun toString(): String {
-        return "Point2D(x=$x, y=$y)"
-    }
+    override fun toString(): String = "Point2D(x=$x, y=$y)"
 
     override fun hashCode(): Int {
         var result = x
         result = 31 * result + y
         return result
     }
+
+    fun cellDistance(x: Int, y: Int): Int = min(abs(this.x - x), abs(this.y - y))
 }
 
 class Location(x: Int, y: Int) : Point2D(x, y) {
@@ -38,9 +41,7 @@ class Location(x: Int, y: Int) : Point2D(x, y) {
         return result
     }
 
-    fun getOccupant(): Thing? {
-        return occupant
-    }
+    fun getOccupant(): Thing? = occupant
 
     override fun toString(): String {
         val s = super.toString()

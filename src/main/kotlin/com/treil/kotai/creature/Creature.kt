@@ -2,13 +2,14 @@ package com.treil.kotai.creature
 
 import com.treil.kotai.brain.Brain
 import com.treil.kotai.brain.InputLayer
+import com.treil.kotai.evolution.ScoreKeeper
 import com.treil.kotai.world.Direction
 import com.treil.kotai.world.Thing
 import com.treil.kotai.world.World
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-open class Creature(val name: String, initialEnergy: Int) : Thing() {
+open class Creature(val name: String, initialEnergy: Int, val scoreKeeper: ScoreKeeper) : Thing() {
     companion object {
         val logger: Logger = LoggerFactory.getLogger(Creature::class.java.simpleName)
     }
@@ -19,7 +20,7 @@ open class Creature(val name: String, initialEnergy: Int) : Thing() {
     var facing = Direction()
     var dead = false
 
-    private val energyManager = object : EnergyManager(initialEnergy) {
+    private val energyManager = object : EnergyManager(initialEnergy, scoreKeeper) {
         override fun isDead() {
             if (logger.isDebugEnabled)
                 logger.debug("Creature $name died")
@@ -50,7 +51,7 @@ open class Creature(val name: String, initialEnergy: Int) : Thing() {
         sensors.forEach { sensor -> sensor.inputs.forEach { input -> inputLayer.add(input) } }
 
         val layerSizes: IntArray = innerLayerSizes.copyOf(innerLayerSizes.size + 1)
-        // Add last layer for acgtuators
+        // Add last layer for actuators
         val outputSize = actuators.fold(0) { acc, actuator -> acc + actuator.inputSize }
         layerSizes[layerSizes.lastIndex] = outputSize
 
@@ -74,7 +75,11 @@ open class Creature(val name: String, initialEnergy: Int) : Thing() {
     }
 
     fun getEnergy(): Int {
-        return energyManager.getEnergy()
+        return energyManager.energy
+    }
+
+    fun getMaxEnergy(): Int {
+        return energyManager.maxEnergy
     }
 
     fun getBrain(): Brain {

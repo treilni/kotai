@@ -14,7 +14,7 @@ open class ProgressiveMutator(seed: Int = 0) : Mutator {
 
     companion object {
         val logger: Logger = LoggerFactory.getLogger(ProgressiveMutator::class.java.simpleName)
-        const val CHANCE_OF_ADDITIONAL_PCT = 20;
+        const val CHANCE_OF_ADDITIONAL_PCT = 30;
     }
 
     override fun getMutationIndex(size: Int, reason: String): Int {

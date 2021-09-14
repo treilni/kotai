@@ -10,7 +10,13 @@ import kotlin.random.Random
  * @author Nicolas
  * @since 19/04/2021.
  */
-class World(val width: Int, val height: Int, obstaclePercent: Int = 0, foodPermille: Int = 0) {
+class World(
+    val width: Int,
+    val height: Int,
+    obstaclePercent: Int = 0,
+    foodPermille: Int = 0,
+    seed: Long = System.currentTimeMillis()
+) {
     companion object {
         val logger: Logger = LoggerFactory.getLogger(World::class.java.simpleName)
     }
@@ -32,7 +38,7 @@ class World(val width: Int, val height: Int, obstaclePercent: Int = 0, foodPermi
 
         // single obstacles
         val obstacles = (width - 2) * (height - 2) * obstaclePercent / 100
-        val random = Random(0)
+        val random = Random(seed)
         repeat(obstacles) {
             val x = random.nextInt(1, width - 2)
             val y = random.nextInt(1, height - 2)
@@ -71,6 +77,20 @@ class World(val width: Int, val height: Int, obstaclePercent: Int = 0, foodPermi
 
     fun getLocation(x: Int, y: Int): Location? {
         return locations.getOrNull(y)?.getOrNull(x)
+    }
+
+    fun getLocationsAround(point2D: Point2D, radius: Int): Array<Location?> {
+        val span = 2 * radius + 1
+        val result = Array<Location?>(span * span) { null }
+        var i = 0
+        val y = point2D.y
+        val x = point2D.x
+        (y - radius..y + radius).forEach { yy ->
+            (x - radius..x + radius).forEach { xx ->
+                result[i++] = getLocation(xx, yy)
+            }
+        }
+        return result
     }
 
     fun placeThingAtRandom(ant: Ant, random: Random) {

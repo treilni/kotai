@@ -5,30 +5,22 @@ import com.treil.kotai.world.Point2D
 import com.treil.kotai.world.World
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import kotlin.math.ln
+import kotlin.math.round
 import kotlin.math.sign
-
-object MvtConstants {
-    private const val MIN_MOVE = -1
-    private const val MAX_MOVE = 1
-
-    /* f(v) = a * log(v + 1) + b
-    *  f(0) = b = 0
-    *  f(MAX_VALUE) = a * log(MAX_VALUE + 1) = MAX_MOVE
-    * */
-    val APOSITIVE = MAX_MOVE.toDouble() / ln(Short.MAX_VALUE.toDouble() + 1)
-    val ANEGATIVE = -MIN_MOVE.toDouble() / ln(-(Short.MIN_VALUE.toDouble()) + 1)
-}
 
 class MovementActuator(scoreKeeper: ScoreKeeper) : Actuator(scoreKeeper) {
     companion object {
+        private const val MIN_MOVE = -1
+        private const val MAX_MOVE = 1
+
+        /* f(v) = a * log(v + 1) + b
+        *  f(0) = b = MIN_MOVE
+        *  f(MAX_VALUE) = a * MAX_VALUE + MIN_MOVE = MAX_MOVE
+        *  a = (MAX_MOVE - MIN_MOVE) / MAX_VALUE
+        * */
         val logger: Logger = LoggerFactory.getLogger(MovementActuator::class.java.simpleName)
         val valueTable: Array<Int> = Array(Short.MAX_VALUE - Short.MIN_VALUE + 1) { i ->
-            val v = i + Short.MIN_VALUE
-            if (v >= 0)
-                return@Array (MvtConstants.APOSITIVE * (ln(v.toDouble() + 1.0))).toInt()
-            else
-                return@Array (MvtConstants.ANEGATIVE * (ln(-v.toDouble() + 1.0))).toInt()
+            round((MAX_MOVE - MIN_MOVE).toDouble() * i.toDouble() / (Short.MAX_VALUE - Short.MIN_VALUE)).toInt() + MIN_MOVE
         }
     }
 
@@ -46,19 +38,21 @@ class MovementActuator(scoreKeeper: ScoreKeeper) : Actuator(scoreKeeper) {
             val v = hasValue.value.toInt()
             var direction = creature.facing
             val speed = valueTable[v - Short.MIN_VALUE]
-            if (v >= 0) {
+            var moveCount = speed
+            if (speed >= 0) {
                 if (logger.isTraceEnabled) {
-                    logger.trace("Moving to ${creature.facing} $speed times")
+                    logger.trace("Moving to ${creature.facing} $moveCount times")
                 }
             } else {
+                moveCount = -speed;
                 direction = direction.opposite()
                 if (logger.isTraceEnabled) {
-                    logger.trace("Moving to ${creature.facing} ${-speed} times")
+                    logger.trace("Moving to ${creature.facing} ${moveCount} times")
                 }
             }
 
-            if (speed != 0) {
-                repeat(speed) {
+            if (moveCount > 0) {
+                repeat(moveCount) {
                     position = position?.let { direction.move(it) }
                 }
                 if (position != null) {

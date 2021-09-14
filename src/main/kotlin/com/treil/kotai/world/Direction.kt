@@ -7,10 +7,11 @@ import org.slf4j.LoggerFactory
  * @author Nicolas
  * @since 20/04/2021.
  *
- * Direction in degrees
+ * Direction in degrees between 0 and 360
  */
 class Direction(private var degrees: Short = 0) {
     constructor(other: Direction) : this(other.degrees)
+    constructor(degrees: Int) : this(degrees.toShort())
 
     companion object {
         val logger: Logger = LoggerFactory.getLogger(Direction::class.java.simpleName)

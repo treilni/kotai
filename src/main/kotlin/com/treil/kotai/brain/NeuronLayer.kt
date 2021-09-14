@@ -6,7 +6,7 @@ package com.treil.kotai.brain
  */
 class NeuronLayer(private val inputLayer: InputLayer) : InputLayer(), HasDNA {
     constructor(inputLayer: InputLayer, size: Int) : this(inputLayer) {
-        repeat(size) { i -> add(Neuron()) }
+        repeat(size) { add(Neuron()) }
     }
 
     private val neurons: MutableList<Neuron> = ArrayList()

@@ -39,7 +39,7 @@ fun main(args: Array<String>) {
 object RenderingConstants {
     const val DISPLAY_WIDTH = 800
     const val DISPLAY_HEIGHT = 800
-    const val TICK_MS: Long = 25
+    const val TICK_MS: Long = 200
     val ANT_COLOR: Color = Color.RED
     val DYING_ANT_COLOR: Color = Color.BLACK
 }
@@ -85,14 +85,14 @@ class WorldRenderer : GameApplication() {
         //val world = World(20, 20, 7, 50)
         val world = Evolution.createWorld()
         scale = RenderingConstants.DISPLAY_WIDTH.toDouble() / world.width
-        val random = Random(0)
+        val random = Random(100)
         val dna =
-            "25654/29150C-29521/440N-19235/10563C13702/-598N19583/18538C-30453/29202N14892/-26676C29838/-823L-24689/-9786C20760/28376C-2968/9751C21036/-2330N4521/-12283C-30984/18913C18162/-3277C24259/29424N25187/23092C25044/6203C24327/1027C-3378/31244"
+            "18124/5051C12714/19795C-5933/21686C-26434/8042C-3402/30223N25764/-16629C-1706/-13559C-3231/-30364C18409/-28861C-25535/-22285N-21770/-1188C13887/-17625C3729/-29682C26718/20375C11285/9084N-12258/-4381C5710/-21588C29061/276C-28223/29097C26531/-16948N-466/-18164C-32474/-25692C2365/29942C-926/32767C-24817/13807L7279/29192C-23465/10934C-9822/20147C8000/-32274C-32492/27035N-12215/-25688C-1781/-16076C26708/29495C13579/30192C-23217/-7007N-31066/30224C30502/-25329C-9418/24216C3186/12990C17191/-16469N17825/22039C-21215/24432C22658/-30821C20958/23288C-3629/3530N1653/-31141C-11388/-16352C12792/12249C-12278/24013C-21523/23055L3664/5188C26028/-21417C7467/-5446C-1251/27808C-20748/28272N-27821/-32412C13747/-4128C18969/6451C29320/-18885C3694/-32716N4777/423C360/-5783C-26749/-16138C-15635/-28449C10900/-20783"
         world.placeThingAtRandom(createAnt(dna), random)
-//        world.placeThingAtRandom(createAnt(dna), random)
-//        world.placeThingAtRandom(createAnt(dna), random)
-//        world.placeThingAtRandom(createAnt(dna), random)
-//        world.placeThingAtRandom(createAnt(dna), random)
+        world.placeThingAtRandom(createAnt(dna), random)
+        world.placeThingAtRandom(createAnt(dna), random)
+        world.placeThingAtRandom(createAnt(dna), random)
+        world.placeThingAtRandom(createAnt(dna), random)
 
         // render content
         for (x in 0 until world.width) {
@@ -132,9 +132,13 @@ class WorldRenderer : GameApplication() {
                     if (!it.dead) {
                         it.liveOneTick(world)
                         alive = true
+                    } else if (it is Ant) {
+                        logger.info("Final score : ${it.scoreKeeper.score}")
                     }
                 }
-                if (!alive) break
+                if (!alive) {
+                    break
+                }
                 Thread.sleep(TICK_MS)
             }
         }

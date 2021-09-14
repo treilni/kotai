@@ -8,6 +8,11 @@
     </remote-repository>
     <remote-repository>
       <option name="id" value="central" />
+      <option name="name" value="Central Repository" />
+      <option name="url" value="http://10.249.0.45:8081/repository/maven-public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="central" />
       <option name="name" value="central" />
       <option name="url" value="http://10.249.0.45:8081/repository/maven-public/" />
     </remote-repository>

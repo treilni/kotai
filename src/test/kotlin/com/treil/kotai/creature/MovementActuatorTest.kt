@@ -24,7 +24,7 @@ internal class MovementActuatorTest {
     @Test
     fun act() {
         val world = World(10, 10)
-        val creature = Creature("TEST", 100)
+        val creature = Creature("TEST", 100, MovementScoreKeeper())
         world.placeThingAt(creature, 5, 5)
 
         val actuator = MovementActuator(MovementScoreKeeper())
