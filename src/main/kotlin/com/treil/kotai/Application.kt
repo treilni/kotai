@@ -35,9 +35,11 @@ class Application : GameApplication() {
     override fun initGame() {
         player = FXGL.entityBuilder()
             .at(300.0, 300.0)
-            .view(Rectangle(25.0, 25.0, Color.BLUE))
+            .view(renderedPlayer())
             .buildAndAttach()
     }
+
+    private fun renderedPlayer() = Rectangle(25.0, 25.0, Color.BLUE)
 
     fun launchApp(args: Array<String>) {
         logger.info("Launching")

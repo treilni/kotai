@@ -19,12 +19,14 @@ open class Creature(val name: String, initialEnergy: Int, val scoreKeeper: Score
     private var brain: Brain = Brain(InputLayer(), 0, 0) // temporary empty brain
     var facing = Direction()
     var dead = false
+    var onDeath: ((Creature) -> Unit)? = null
 
     private val energyManager = object : EnergyManager(initialEnergy, scoreKeeper) {
         override fun isDead() {
             if (logger.isDebugEnabled)
                 logger.debug("Creature $name died")
             dead = true
+            onDeath?.invoke(this@Creature)
         }
     }
 

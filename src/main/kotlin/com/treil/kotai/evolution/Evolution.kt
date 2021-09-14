@@ -48,7 +48,7 @@ fun main(args: Array<String>) {
             var totalScore = 0
             repeat(Evolution.SAMPLES_PER_DNA) {
                 val scoreKeeper = MovementScoreKeeper()
-                val ant = Ant(scoreKeeper, Evolution.INITIAL_ENERGY)
+                val ant = Ant(scoreKeeper, "Ant", Evolution.INITIAL_ENERGY)
                 ant.getBrain().setDNA(dna)
                 world.placeThingAtRandom(ant, random)
                 while (!ant.dead) {

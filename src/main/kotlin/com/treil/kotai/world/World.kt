@@ -96,6 +96,7 @@ class World(
     fun placeThingAtRandom(ant: Ant, random: Random) {
         while (true) {
             try {
+                ant.facing = Direction(Random.nextInt(0, 360))
                 placeThingAt(ant, random.nextInt(0, width), random.nextInt(0, height))
                 return
             } catch (e: Exception) {

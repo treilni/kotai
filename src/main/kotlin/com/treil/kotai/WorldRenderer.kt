@@ -12,6 +12,8 @@ import com.treil.kotai.creature.Ant
 import com.treil.kotai.creature.Creature
 import com.treil.kotai.evolution.Evolution
 import com.treil.kotai.evolution.MovementScoreKeeper
+import com.treil.kotai.render.EntityType
+import com.treil.kotai.render.UserInterface
 import com.treil.kotai.world.Attribute
 import com.treil.kotai.world.Food
 import com.treil.kotai.world.Obstacle
@@ -39,13 +41,16 @@ fun main(args: Array<String>) {
 object RenderingConstants {
     const val DISPLAY_WIDTH = 800
     const val DISPLAY_HEIGHT = 800
-    const val TICK_MS: Long = 200
+    const val TICK_MS: Long = 50
     val ANT_COLOR: Color = Color.RED
     val DYING_ANT_COLOR: Color = Color.BLACK
 }
 
 class WorldRenderer : GameApplication() {
+    // living entities
     private val movingEntities: MutableMap<Creature, Entity> = HashMap()
+
+    // depletable entities like food
     private val depletableEntities: MutableMap<Attribute, Entity> = HashMap()
     private var scale = 1.0
 
@@ -75,24 +80,26 @@ class WorldRenderer : GameApplication() {
         return relativeHeight - y * scale
     }
 
-    fun createAnt(dna: String): Ant {
-        val ant = Ant(MovementScoreKeeper(), 200)
+    fun createAnt(dna: String, name: String = "Ant"): Ant {
+        val ant = Ant(MovementScoreKeeper(), name, 200)
         ant.getBrain().setDNA(dna)
+        ant.onDeath = {
+            logger.info("Final score for ${it.name} : ${it.scoreKeeper.score}")
+        }
         return ant
     }
 
     override fun initGame() {
-        //val world = World(20, 20, 7, 50)
         val world = Evolution.createWorld()
         scale = RenderingConstants.DISPLAY_WIDTH.toDouble() / world.width
         val random = Random(100)
         val dna =
             "18124/5051C12714/19795C-5933/21686C-26434/8042C-3402/30223N25764/-16629C-1706/-13559C-3231/-30364C18409/-28861C-25535/-22285N-21770/-1188C13887/-17625C3729/-29682C26718/20375C11285/9084N-12258/-4381C5710/-21588C29061/276C-28223/29097C26531/-16948N-466/-18164C-32474/-25692C2365/29942C-926/32767C-24817/13807L7279/29192C-23465/10934C-9822/20147C8000/-32274C-32492/27035N-12215/-25688C-1781/-16076C26708/29495C13579/30192C-23217/-7007N-31066/30224C30502/-25329C-9418/24216C3186/12990C17191/-16469N17825/22039C-21215/24432C22658/-30821C20958/23288C-3629/3530N1653/-31141C-11388/-16352C12792/12249C-12278/24013C-21523/23055L3664/5188C26028/-21417C7467/-5446C-1251/27808C-20748/28272N-27821/-32412C13747/-4128C18969/6451C29320/-18885C3694/-32716N4777/423C360/-5783C-26749/-16138C-15635/-28449C10900/-20783"
-        world.placeThingAtRandom(createAnt(dna), random)
-        world.placeThingAtRandom(createAnt(dna), random)
-        world.placeThingAtRandom(createAnt(dna), random)
-        world.placeThingAtRandom(createAnt(dna), random)
-        world.placeThingAtRandom(createAnt(dna), random)
+        world.placeThingAtRandom(createAnt(dna, "Ant1"), random)
+        world.placeThingAtRandom(createAnt(dna, "Ant2"), random)
+        world.placeThingAtRandom(createAnt(dna, "Ant3"), random)
+        world.placeThingAtRandom(createAnt(dna, "Ant4"), random)
+        world.placeThingAtRandom(createAnt(dna, "Ant5"), random)
 
         // render content
         for (x in 0 until world.width) {
@@ -101,6 +108,7 @@ class WorldRenderer : GameApplication() {
                 val occupant = location.getOccupant()
                 if (occupant is Obstacle) {
                     FXGL.entityBuilder()
+                        .type(EntityType.OBSTACLE)
                         .at(renderX(x), renderY(y))
                         .view(renderedObstacle())
                         .buildAndAttach()
@@ -109,6 +117,7 @@ class WorldRenderer : GameApplication() {
                     val node = renderAttribute(attribute)
                     if (node != null) {
                         depletableEntities[attribute] = FXGL.entityBuilder()
+                            .type(EntityType.DEPLETABLE)
                             .at(renderX(x), renderY(y))
                             .view(node)
                             .buildAndAttach()
@@ -116,6 +125,7 @@ class WorldRenderer : GameApplication() {
                 }
                 if (occupant is Ant) {
                     movingEntities[occupant] = FXGL.entityBuilder()
+                        .type(EntityType.LIVING)
                         .rotationOrigin(scale / 2 + 0.5, scale / 2 + 0.5)
                         .rotate(occupant.facing.getStepDegrees().toDouble())
                         .at(renderX(x), renderY(y))
@@ -124,6 +134,13 @@ class WorldRenderer : GameApplication() {
                 }
             }
         }
+        // render UI
+        val userInterface = UserInterface(world, scale)
+        FXGL.entityBuilder()
+            .type(EntityType.UI)
+            .at(0.0, renderY(-1))
+            .view(userInterface.entity)
+            .buildAndAttach()
 
         thread(start = true) {
             while (true) {
@@ -132,8 +149,6 @@ class WorldRenderer : GameApplication() {
                     if (!it.dead) {
                         it.liveOneTick(world)
                         alive = true
-                    } else if (it is Ant) {
-                        logger.info("Final score : ${it.scoreKeeper.score}")
                     }
                 }
                 if (!alive) {

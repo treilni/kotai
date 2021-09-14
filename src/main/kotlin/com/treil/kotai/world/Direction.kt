@@ -76,5 +76,4 @@ class Direction(private var degrees: Short = 0) {
         return (degrees - (degrees % 45)).toShort()
     }
 
-
 }
