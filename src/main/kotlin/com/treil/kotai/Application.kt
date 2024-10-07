@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory
  * @author Nicolas
  * @since 14/04/2021.
  */
-
+@Deprecated("For basic test only")
 fun main(args: Array<String>) {
     val application = Application()
     application.launchApp(args);

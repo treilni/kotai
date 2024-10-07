@@ -15,11 +15,12 @@ object Evolution {
 
     const val KEPT_PERCENT = 25
     const val SAMPLES_PER_DNA = 1
-    const val CYCLES = 25000
+    const val CYCLES = 20000
+    const val MAX_UNSUCCESSFUL_CYCLES = 5000
 
-    const val WORLD_SIZE = 20
-    const val WORLD_OBSTACLES_PCT = 7
-    const val WORLD_FOOD_PM = 20
+    const val WORLD_SIZE = 100
+    const val WORLD_OBSTACLES_PCT = 6
+    const val WORLD_FOOD_PM = 15
     const val INITIAL_ENERGY = 50
 
 
@@ -38,6 +39,9 @@ fun main(args: Array<String>) {
 
     var lastBest = 0
     for (i in 1..Evolution.CYCLES) {
+        if (i % 100 == 0) {
+            logger.info("CYCLE $i")
+        }
         val world = World(
             Evolution.WORLD_SIZE, Evolution.WORLD_SIZE,
             Evolution.WORLD_OBSTACLES_PCT,
