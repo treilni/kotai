@@ -2,12 +2,15 @@ package com.treil.kotai.brain
 
 import kotlin.random.Random
 
-/**
- * @author Nicolas
- * @since 17/04/2021.
- */
 val random = Random(0)
 
+/**
+ * A brain is a set of stacked neuron layers connected to an input layer which will collect the valyes of sensors
+ * A brain can be parametrized from a DNA String
+ * @author Nicolas
+ * @since 17/04/2021.
+ * @see DNA
+ */
 class Brain(inputLayer: InputLayer, vararg layerSizes: Int) : HasDNA {
 
     private val layers: MutableList<NeuronLayer>

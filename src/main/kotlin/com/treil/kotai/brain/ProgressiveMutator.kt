@@ -6,6 +6,8 @@ import kotlin.math.sign
 import kotlin.random.Random
 
 /**
+ * A Mutator which applies a small mutation to short values (max 1000)
+ * The mutation count is 1 + 30% chance of 1 + 30% chance of 1 + ...
  * @author Nicolas
  * @since 19/04/2021.
  */

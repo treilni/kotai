@@ -4,6 +4,9 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 /**
+ * A representation of a neuron. A neuron has inputs which are a set of values, and a single output value which can be computed.
+ * Computation is using a coeficient and bias for each input value
+ * Coefficients and biases can be parametrized by reading a DNA chain
  * @author Nicolas
  * @since 15/04/2021.
  */
@@ -19,9 +22,11 @@ open class Neuron : HasValue, HasDNA {
         val logger: Logger = LoggerFactory.getLogger(Neuron::class.java.simpleName)
     }
 
-    class Input(private val input: HasValue, var coef: Short, var bias: Short) : HasDNA {
-        private val DNA_SIZE = Short.SIZE_BYTES * 2
-
+    /**
+     * An input connexion to a neuron (i.e. an entry). An input has a coef and bias to compute the contribution of this connexion to
+     * the neuron's output
+     */
+    class InputConnexion(private val input: HasValue, var coef: Short, var bias: Short) : HasDNA {
         fun value(): Int {
             return coef * input.value + bias
         }
@@ -49,12 +54,12 @@ open class Neuron : HasValue, HasDNA {
 
     }
 
-    private val inputs: MutableList<Input> = ArrayList()
+    private val inputConnexions: MutableList<InputConnexion> = ArrayList()
 
     override var value: Short = 0
 
     fun compute() {
-        val fold = inputs.fold(0L) { acc, input -> acc + input.value() }
+        val fold = inputConnexions.fold(0L) { acc, input -> acc + input.value() }
         val normalized = fold.toDouble() / Constants.NORMALIZATION_FACTOR
         val result = Constants.MIN_OUT + (Constants.OUT_RANGE / (1.0 + Math.exp(-normalized)))
         value = Math.round(result).toShort()
@@ -64,35 +69,44 @@ open class Neuron : HasValue, HasDNA {
     }
 
     fun addInput(value: HasValue, coef: Short = 0, bias: Short = 0) {
-        inputs.add(Input(value, coef, bias))
+        inputConnexions.add(InputConnexion(value, coef, bias))
     }
 
+    /**
+     * Used to generate the DNA chain corresponding to this neuron's connexion parameters
+     */
     override fun toDNA(): String {
-        return inputs.joinToString(separator = DNA.Type.COEF.symbol.toString()) { input -> input.toDNA() }
+        return inputConnexions.joinToString(separator = DNA.Type.COEF.symbol.toString()) { input -> input.toDNA() }
     }
 
     fun setAllCoefs(coef: Short) {
-        inputs.forEach { input -> input.coef = coef }
+        inputConnexions.forEach { input -> input.coef = coef }
     }
 
+    /**
+     * Used to read a DNA chain to set neuron connexion parameters
+     */
     fun updateCoefsFromDNA(dna: String) {
         val split = dna.ifEmpty() { "0/0" }.split(DNA.Type.COEF.symbol)
         for (i in split.indices) {
-            if (i >= inputs.size) {
+            if (i >= inputConnexions.size) {
                 break
             }
-            inputs[i].updateCoefFromDNA(split[i])
+            inputConnexions[i].updateCoefFromDNA(split[i])
         }
         var i = split.size
-        while (i < inputs.size) {
-            inputs[i].coef = 0
+        while (i < inputConnexions.size) {
+            inputConnexions[i].coef = 0
             i++
         }
     }
 
+    /**
+     * A function to mutate one of this neuron's input
+     */
     override fun mutate(mutator: Mutator) {
-        val i: Int = mutator.getMutationIndex(inputs.size, "INPUT")
-        inputs[i].mutate(mutator)
+        val i: Int = mutator.getMutationIndex(inputConnexions.size, "INPUT")
+        inputConnexions[i].mutate(mutator)
     }
 
 }

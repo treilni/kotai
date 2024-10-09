@@ -1,8 +1,11 @@
 package com.treil.kotai.brain
 
 /**
+ * An extension of InputLayer consists in an array of Neuron connected to an InputLayer
  * @author Nicolas
  * @since 15/04/2021.
+ * @param inputLayer : The input layer from which this neuron layer takes its input values from
+ * @see InputLayer
  */
 class NeuronLayer(private val inputLayer: InputLayer) : InputLayer(), HasDNA {
     constructor(inputLayer: InputLayer, size: Int) : this(inputLayer) {

@@ -1,6 +1,5 @@
 package com.treil.kotai.brain
 
-import com.treil.kotai.Application
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.slf4j.Logger
@@ -20,24 +19,24 @@ internal class NeuronTest {
     fun testSingleOutput() {
         val three: HasValue = StaticValue(3)
 
-        val input: Neuron.Input = Neuron.Input(three, Short.MAX_VALUE, 0)
-        assertEquals(3 * Short.MAX_VALUE, input.value())
+        val inputConnexion: Neuron.InputConnexion = Neuron.InputConnexion(three, Short.MAX_VALUE, 0)
+        assertEquals(3 * Short.MAX_VALUE, inputConnexion.value())
     }
 
     @Test
     fun testSingleOutputWithBias() {
         val three: HasValue = StaticValue(3)
 
-        val input: Neuron.Input = Neuron.Input(three, Short.MAX_VALUE, -4)
-        assertEquals(3 * Short.MAX_VALUE - 4, input.value())
+        val inputConnexion: Neuron.InputConnexion = Neuron.InputConnexion(three, Short.MAX_VALUE, -4)
+        assertEquals(3 * Short.MAX_VALUE - 4, inputConnexion.value())
     }
 
     @Test
     fun testSingleOutput2() {
         val max: HasValue = StaticValue(Short.MAX_VALUE)
 
-        val input: Neuron.Input = Neuron.Input(max, Short.MAX_VALUE, Short.MAX_VALUE)
-        assertEquals(Short.MAX_VALUE * Short.MAX_VALUE + Short.MAX_VALUE, input.value())
+        val inputConnexion: Neuron.InputConnexion = Neuron.InputConnexion(max, Short.MAX_VALUE, Short.MAX_VALUE)
+        assertEquals(Short.MAX_VALUE * Short.MAX_VALUE + Short.MAX_VALUE, inputConnexion.value())
     }
 
     @Test

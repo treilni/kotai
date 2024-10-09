@@ -1,6 +1,7 @@
 package com.treil.kotai.brain
 
 /**
+ * DNA is a string representing layers of lists of Neuron information
  * @author Nicolas
  * @since 15/04/2021.
  */

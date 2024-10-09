@@ -1,6 +1,7 @@
 package com.treil.kotai.brain
 
 /**
+ * A Mutator which applies perfectly random mutation to a short
  * @author Nicolas
  * @since 19/04/2021.
  */
