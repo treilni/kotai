@@ -10,7 +10,7 @@ class Food(private val location: Location, private var energy: Int = 200) : Attr
     val initialEnergy = energy
 
     init {
-        location.addAttribute(this);
+        location.addAttribute(this)
     }
 
     fun deplete(spoon: Int): Int {

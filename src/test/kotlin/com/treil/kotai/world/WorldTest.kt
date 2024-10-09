@@ -10,8 +10,7 @@ import kotlin.test.assertNotEquals
  * @since 20/04/2021.
  */
 internal class WorldTest {
-    class TestThing : Thing() {
-    }
+    class TestThing : Thing()
 
     @Test
     fun create() {

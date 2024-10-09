@@ -142,7 +142,7 @@ class WorldRenderer : GameApplication() {
             .buildAndAttach()
 
         thread(start = true) {
-            var tick = 0L;
+            var tick = 0L
             while (true) {
                 var alive = false
                 movingEntities.keys.forEach {
@@ -186,7 +186,7 @@ class WorldRenderer : GameApplication() {
 
     override fun onUpdate(tpf: Double) {
         super.onUpdate(tpf)
-        movingEntities.forEach() { (creature, entity) ->
+        movingEntities.forEach { (creature, entity) ->
             val location = creature.location
             if (location != null) {
                 val energy = creature.getEnergy()
@@ -204,7 +204,7 @@ class WorldRenderer : GameApplication() {
             }
         }
 
-        depletableEntities.forEach() { (attribute, entity) ->
+        depletableEntities.forEach { (attribute, entity) ->
             if (attribute is Food) {
                 entity.setScaleUniform(attribute.getRemainingPercent() / 100.0)
             }

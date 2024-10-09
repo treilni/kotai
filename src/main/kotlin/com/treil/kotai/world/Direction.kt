@@ -59,9 +59,7 @@ class Direction(private var degrees: Short = 0) {
         if (javaClass != other?.javaClass) return false
 
         other as Direction
-        if (degrees != other.degrees) return false
-
-        return true
+        return degrees == other.degrees
     }
 
     override fun hashCode(): Int {

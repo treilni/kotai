@@ -16,20 +16,20 @@ import org.slf4j.LoggerFactory
 @Deprecated("For basic test only")
 fun main(args: Array<String>) {
     val application = Application()
-    application.launchApp(args);
+    application.launchApp(args)
 }
 
 class Application : GameApplication() {
-    private var player: Entity? = null;
+    private var player: Entity? = null
 
     companion object {
         val logger = LoggerFactory.getLogger(Application::class.java.getSimpleName())
     }
 
     override fun initSettings(settings: GameSettings?) {
-        settings?.width = 1024;
-        settings?.height = 768;
-        settings?.title = "KotAI";
+        settings?.width = 1024
+        settings?.height = 768
+        settings?.title = "KotAI"
     }
 
     override fun initGame() {

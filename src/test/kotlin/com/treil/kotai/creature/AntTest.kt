@@ -18,7 +18,6 @@ internal class AntTest {
     }
 
     companion object {
-        @Suppress("unused")
         val logger: org.slf4j.Logger = LoggerFactory.getLogger(AntTest::class.java.simpleName)
     }
 

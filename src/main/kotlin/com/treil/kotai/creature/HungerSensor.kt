@@ -16,7 +16,7 @@ class HungerSensor : Sensor() {
      * f(maxEnergy) = a * maxEnergy + Short.MIN_VALUE = Short.MAX_VALUE
      */
     override fun computeValue(world: World, creature: Creature) {
-        val maxEnergy = max(creature.getMaxEnergy(), 1);
+        val maxEnergy = max(creature.getMaxEnergy(), 1)
         val intValue =
             Short.MIN_VALUE + (Short.MAX_VALUE - Short.MIN_VALUE) * (maxEnergy - creature.getEnergy()) / maxEnergy
         hungerValue.value = intValue.toShort()

@@ -2,6 +2,7 @@ package com.treil.kotai.brain
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import kotlin.math.exp
 
 /**
  * A representation of a neuron. A neuron has inputs which are a set of values, and a single output value which can be computed.
@@ -61,7 +62,7 @@ open class Neuron : HasValue, HasDNA {
     fun compute() {
         val fold = inputConnexions.fold(0L) { acc, input -> acc + input.value() }
         val normalized = fold.toDouble() / Constants.NORMALIZATION_FACTOR
-        val result = Constants.MIN_OUT + (Constants.OUT_RANGE / (1.0 + Math.exp(-normalized)))
+        val result = Constants.MIN_OUT + (Constants.OUT_RANGE / (1.0 + exp(-normalized)))
         value = Math.round(result).toShort()
         if (logger.isTraceEnabled) {
             logger.trace("Computed $value for $this")
@@ -87,7 +88,7 @@ open class Neuron : HasValue, HasDNA {
      * Used to read a DNA chain to set neuron connexion parameters
      */
     fun updateCoefsFromDNA(dna: String) {
-        val split = dna.ifEmpty() { "0/0" }.split(DNA.Type.COEF.symbol)
+        val split = dna.ifEmpty { "0/0" }.split(DNA.Type.COEF.symbol)
         for (i in split.indices) {
             if (i >= inputConnexions.size) {
                 break

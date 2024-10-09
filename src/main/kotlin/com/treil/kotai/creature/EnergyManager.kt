@@ -19,7 +19,7 @@ abstract class EnergyManager(val maxEnergy: Int, private val scoreKeeper: ScoreK
     fun gainEnergy(i: Int) {
         energy += i
         if (energy > maxEnergy) {
-            scoreKeeper.foodWaste(energy - maxEnergy);
+            scoreKeeper.foodWaste(energy - maxEnergy)
             energy = maxEnergy // waste
         }
     }

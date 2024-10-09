@@ -30,6 +30,7 @@ class MovementScoreKeeper : ScoreKeeper(0) {
 
     override fun changedFacing(from: Int, to: Int) {
         // slight direction change are encouraged ?
+        score += 0
     }
 
     override fun unsuccessfulMove(speed: Int) {
@@ -44,7 +45,7 @@ class MovementScoreKeeper : ScoreKeeper(0) {
 
     private fun traceScore(reason: String) {
         if (logger.isTraceEnabled)
-            logger.trace("Score changed $reason => $score");
+            logger.trace("Score changed $reason => $score")
     }
 
 }

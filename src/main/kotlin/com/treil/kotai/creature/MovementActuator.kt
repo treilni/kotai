@@ -41,13 +41,13 @@ class MovementActuator(scoreKeeper: ScoreKeeper) : Actuator(scoreKeeper) {
             var moveCount = speed
             if (speed >= 0) {
                 if (logger.isTraceEnabled) {
-                    logger.trace("Moving to ${creature.facing} $moveCount times")
+                    logger.trace("Moving forward ${creature.name} to ${creature.facing} $moveCount times")
                 }
             } else {
-                moveCount = -speed;
+                moveCount = -speed
                 direction = direction.opposite()
                 if (logger.isTraceEnabled) {
-                    logger.trace("Moving to ${creature.facing} ${moveCount} times")
+                    logger.trace("Moving backward ${creature.name} to ${creature.facing} $moveCount times")
                 }
             }
 
@@ -56,15 +56,15 @@ class MovementActuator(scoreKeeper: ScoreKeeper) : Actuator(scoreKeeper) {
                     position = position?.let { direction.move(it) }
                 }
                 if (position != null) {
-                    val pos = position!!
+                    val pos = position
                     try {
                         world.placeThingAt(creature, pos.x, pos.y)
                         if (logger.isDebugEnabled)
-                            logger.debug("placed $creature at ${position?.x},${position?.y}")
+                            logger.debug("placed $creature at ${position.x},${position.y}")
                         scoreKeeper.successfulMove(speed * v.sign, pos.x, pos.y)
-                    } catch (e: Exception) {
+                    } catch (_: Exception) {
                         if (logger.isDebugEnabled)
-                            logger.debug("Failed placing $creature at ${position?.x},${position?.y}")
+                            logger.debug("Failed placing $creature at ${position.x},${position.y}")
                         scoreKeeper.unsuccessfulMove(speed)
                     }
                 }
