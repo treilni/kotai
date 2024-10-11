@@ -7,8 +7,10 @@ import org.slf4j.LoggerFactory
 import kotlin.random.Random
 
 /**
+ * An grid of Locations. A world is framed with obstacles to prevent creatures from moving outside
  * @author Nicolas
  * @since 19/04/2021.
+ * @see Location
  */
 class World(
     val width: Int,
@@ -44,7 +46,7 @@ class World(
             val y = random.nextInt(1, height - 2)
             try {
                 placeThingAt(Obstacle(), x, y)
-            } catch (ignored: java.lang.Exception) {
+            } catch (_: java.lang.Exception) {
             }
         }
 
@@ -56,7 +58,7 @@ class World(
                 if (location != null && location.getOccupant() == null) {
                     Food(location)
                 }
-            } catch (ignored: java.lang.Exception) {
+            } catch (_: java.lang.Exception) {
             }
         }
 

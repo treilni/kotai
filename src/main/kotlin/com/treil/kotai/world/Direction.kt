@@ -17,6 +17,9 @@ class Direction(private var degrees: Short = 0) {
         val logger: Logger = LoggerFactory.getLogger(Direction::class.java.simpleName)
     }
 
+    /**
+     * The x, y delta to move from one step in a direction
+     */
     data class Delta(val x: Int, val y: Int)
 
     fun getDelta(): Delta {

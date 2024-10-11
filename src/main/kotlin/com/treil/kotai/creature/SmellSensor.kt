@@ -10,6 +10,11 @@ import kotlin.math.atan
 import kotlin.math.max
 import kotlin.math.round
 
+/**
+ * A sensor which can detect food value around the creature's position. The resulting output
+ * is the direction of the barycenter of all detected food sources around the creature and the intensity based on the
+ * distance of each food source
+ */
 class SmellSensor : Sensor() {
     companion object {
         const val SMELL_RANGE = 2

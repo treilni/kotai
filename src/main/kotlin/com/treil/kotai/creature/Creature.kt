@@ -9,6 +9,10 @@ import com.treil.kotai.world.World
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
+/**
+ * A moving entity. A creature has a name, an energy bar and can feedback a ScoreKeeper on its activity
+ * @see ScoreKeeper
+ */
 open class Creature(val name: String, initialEnergy: Int, val scoreKeeper: ScoreKeeper) : Thing() {
     companion object {
         val logger: Logger = LoggerFactory.getLogger(Creature::class.java.simpleName)

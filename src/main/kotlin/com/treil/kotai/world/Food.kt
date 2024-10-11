@@ -3,6 +3,7 @@ package com.treil.kotai.world
 import kotlin.math.min
 
 /**
+ * A source of energy for creatures if they choose to eat it
  * @author Nicolas
  * @since 27/04/2021.
  */

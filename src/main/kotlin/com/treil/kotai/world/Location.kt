@@ -3,6 +3,9 @@ package com.treil.kotai.world
 import java.lang.Integer.min
 import kotlin.math.abs
 
+/**
+ * A position on a discrete map
+ */
 open class Point2D(val x: Int, val y: Int) {
     override fun equals(other: Any?): Boolean {
         if (other is Point2D) {
@@ -22,6 +25,11 @@ open class Point2D(val x: Int, val y: Int) {
     fun cellDistance(x: Int, y: Int): Int = min(abs(this.x - x), abs(this.y - y))
 }
 
+/**
+ * A location on the grid. A location can have a single Thing occupant, and several Attributes
+ * @see Thing
+ * @see Attribute
+ */
 class Location(x: Int, y: Int) : Point2D(x, y) {
     private var occupant: Thing? = null
 

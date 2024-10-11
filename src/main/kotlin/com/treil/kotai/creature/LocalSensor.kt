@@ -6,6 +6,9 @@ import com.treil.kotai.world.World
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
+/**
+ * A sensor which outputs a value based on the available food ar the creature's location
+ */
 class LocalSensor : Sensor() {
     private companion object {
         const val FOOD_NORMALIZATION = 20

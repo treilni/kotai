@@ -3,6 +3,9 @@ package com.treil.kotai.creature
 import com.treil.kotai.world.World
 import java.lang.Integer.max
 
+/**
+ * A sensor which outputs a value between Short.MIN_VALUE (empty) and Short.MAX_VALUE (full) depending on a creature's energy bar
+ */
 class HungerSensor : Sensor() {
     private val hungerValue = Value(0)
 
