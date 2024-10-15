@@ -10,6 +10,6 @@ import javafx.scene.shape.Rectangle
  * @since 14/09/2021.
  */
 class UserInterface(world: World, scale: Double) {
-    private val height: Int = 3
-    val entity: Node = Rectangle(world.width * scale, height * scale, Color.BLACK)
+    val height: Int = 5
+    val graphicalEntity: Node = Rectangle(world.width * scale, height * scale, Color.CORAL)
 }

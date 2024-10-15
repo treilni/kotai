@@ -93,7 +93,7 @@ class WorldRenderer : GameApplication() {
         val world = Evolution.createWorld()
         scale = RenderingConstants.DISPLAY_WIDTH.toDouble() / world.width
         val random = Random(100)
-        val dna = "10773/-2387C26510/-27084C12353/12738C-29112/-25836C871/-30759N11216/-12049C-13652/28937C1603/-10707C-24933/29441C-29611/26412N-2966/-4351C454/-3115C-6583/-20556C-26684/-7147C-303/5659N19419/4509C-15062/-15134C3396/24385C4511/5607C-23756/20970N30509/19537C19172/-2399C-21146/-22738C-13482/-30410C425/28925L-13056/-7358C-1410/-4044C22947/-28962C19806/4125C28709/5684N-19006/-16379C1916/8670C-22712/16960C-5768/-938C14444/29051N27140/20659C5871/-5628C-6778/9840C-26908/11048C25712/1638N22559/-3257C-10464/-19419C-3603/-5003C-18026/5870C24626/-2415N-32729/10260C29763/-20734C1457/10789C-15292/2181C-32691/-11082L2438/-20719C-24024/-27943C7990/-30495C24496/-20790C-2101/-23343N-5195/20396C3049/-14059C-30405/12034C26600/-9373C4443/-20971N28655/10091C-2603/-12916C10066/27809C-2308/28561C-21920/-32312"
+        val dna = "-13202/-25859C1622/13411C-32542/-20716C-3209/-1967C3357/2726N-10302/-28289C16156/20108C-6098/2639C-4862/-16901C22091/-7915N792/1268C-5798/-1996C1250/-30543C-987/17489C10799/-10510N-16473/2232C24770/13254C81/-23146C3796/10202C-599/16925N2219/13619C-11372/-18732C-28610/27460C-29417/2506C-2428/29484L-9634/-19095C-31032/-4247C2483/20564C-5117/-19181C-21052/-30132N8408/25751C13873/29378C21460/22081C28986/3312C-11620/22255N-15173/-28874C-3534/-24296C-20136/-18915C28281/-24585C-12088/-2221N14531/27183C-23103/-11017C18335/20431C29892/12005C10671/11397N-4809/-19479C-8331/4134C-1059/14497C-29155/9551C25123/18461L18635/25232C926/3754C25020/-3688C-11593/-18882C-31182/16956N-24100/25180C-16998/-3889C-8638/29721C28112/19680C-12390/19876N23573/23106C26917/-29842C14617/-27951C-10172/7560C30453/31629"
         world.placeThingAtRandom(createAnt(dna, "Ant1"), random)
         world.placeThingAtRandom(createAnt(dna, "Ant2"), random)
         world.placeThingAtRandom(createAnt(dna, "Ant3"), random)
@@ -106,6 +106,7 @@ class WorldRenderer : GameApplication() {
                 val location = world.getLocation(x, y)!!
                 val occupant = location.getOccupant()
                 if (occupant is Obstacle) {
+                    // Render obstacles
                     FXGL.entityBuilder()
                         .type(EntityType.OBSTACLE)
                         .at(renderX(x), renderY(y))
@@ -113,6 +114,7 @@ class WorldRenderer : GameApplication() {
                         .buildAndAttach()
                 }
                 location.attributes.forEach { attribute ->
+                    // Render attributes (currently food)
                     val node = renderAttribute(attribute)
                     if (node != null) {
                         depletableEntities[attribute] = FXGL.entityBuilder()
@@ -123,6 +125,7 @@ class WorldRenderer : GameApplication() {
                     }
                 }
                 if (occupant is Ant) {
+                    // Render ants
                     movingEntities[occupant] = FXGL.entityBuilder()
                         .type(EntityType.LIVING)
                         .rotationOrigin(scale / 2 + 0.5, scale / 2 + 0.5)
@@ -137,8 +140,8 @@ class WorldRenderer : GameApplication() {
         val userInterface = UserInterface(world, scale)
         FXGL.entityBuilder()
             .type(EntityType.UI)
-            .at(0.0, renderY(-1))
-            .view(userInterface.entity)
+            .at(0.0, renderY(userInterface.height))
+            .view(userInterface.graphicalEntity)
             .buildAndAttach()
 
         thread(start = true) {

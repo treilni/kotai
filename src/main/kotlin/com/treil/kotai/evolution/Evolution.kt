@@ -1,6 +1,7 @@
 package com.treil.kotai.evolution
 
 import com.treil.kotai.creature.Ant
+import com.treil.kotai.evolution.Evolution.MAX_UNSUCCESSFUL_CYCLES
 import com.treil.kotai.world.World
 import kotlin.random.Random
 
@@ -15,8 +16,8 @@ object Evolution {
 
     const val KEPT_PERCENT = 25
     const val SAMPLES_PER_DNA = 1
-    const val CYCLES = 20000
-    const val MAX_UNSUCCESSFUL_CYCLES = 5000
+    const val MAX_CYCLES = 200000
+    const val MAX_UNSUCCESSFUL_CYCLES = 20000
 
     const val WORLD_SIZE = 100
     const val WORLD_OBSTACLES_PCT = 6
@@ -38,9 +39,14 @@ fun main(args: Array<String>) {
     val dnaBank = DNABank(size, Ant(MovementScoreKeeper()))
 
     var lastBest = 0
-    for (i in 1..Evolution.CYCLES) {
+    var unsuccessfulCycles = 0
+    for (i in 1..Evolution.MAX_CYCLES) {
+        if (unsuccessfulCycles >= MAX_UNSUCCESSFUL_CYCLES) {
+            logger.info("Stopped evolving after $unsuccessfulCycles unsuccessful cycles.")
+            break
+        }
         if (i % 100 == 0) {
-            logger.info("CYCLE $i")
+            logger.info("CYCLE $i, best score : ${lastBest}, unsuccessful cycles : $unsuccessfulCycles.")
         }
         val world = World(
             Evolution.WORLD_SIZE, Evolution.WORLD_SIZE,
@@ -68,6 +74,10 @@ fun main(args: Array<String>) {
             logger.info("Round $i Best DNA scored ${best.score} (generation=${best.generation} dna=${best.dna})")
             System.err.println("val dna = \"${best.dna}\"")
             lastBest = best.score
+            unsuccessfulCycles = 0
+        }
+        else {
+            unsuccessfulCycles++
         }
         dnaBank.mutate()
     }

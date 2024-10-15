@@ -56,15 +56,15 @@ class MovementActuator(scoreKeeper: ScoreKeeper) : Actuator(scoreKeeper) {
                     position = position?.let { direction.move(it) }
                 }
                 if (position != null) {
-                    val pos = position
+                    val pos = position!!
                     try {
                         world.placeThingAt(creature, pos.x, pos.y)
                         if (logger.isDebugEnabled)
-                            logger.debug("placed $creature at ${position.x},${position.y}")
+                            logger.debug("placed $creature at ${position?.x},${position?.y}")
                         scoreKeeper.successfulMove(speed * v.sign, pos.x, pos.y)
                     } catch (_: Exception) {
                         if (logger.isDebugEnabled)
-                            logger.debug("Failed placing $creature at ${position.x},${position.y}")
+                            logger.debug("Failed placing $creature at ${position?.x},${position?.y}")
                         scoreKeeper.unsuccessfulMove(speed)
                     }
                 }
